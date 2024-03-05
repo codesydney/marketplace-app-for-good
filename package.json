@@ -3,16 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "pnpm supabase:start && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
     "changeset": "changeset",
-    "changeset:version": "changeset version"
+    "changeset:version": "changeset version",
+    "supabase:start": "npx supabase start",
+    "supabase:stop": "npx supabase stop"
   },
   "dependencies": {
     "@changesets/cli": "^2.27.1",
+    "@supabase/ssr": "^0.1.0",
+    "@supabase/supabase-js": "^2.39.7",
+    "geist": "^1.2.2",
     "next": "14.1.2",
     "react": "^18",
     "react-dom": "^18"
@@ -24,6 +29,7 @@
     "@types/react-dom": "^18",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.0.1",
+    "encoding": "^0.1.13",
     "eslint": "^8",
     "eslint-config-next": "14.1.2",
     "jsdom": "^24.0.0",
