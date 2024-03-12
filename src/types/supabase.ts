@@ -9,19 +9,67 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      service_providers: {
+        Row: {
+          abn: string
+          acn: string | null
+          cover_image_url: string | null
+          name: string
+          profile_image_url: string | null
+          slug: string
+          user_id: string
+        }
+        Insert: {
+          abn: string
+          acn?: string | null
+          cover_image_url?: string | null
+          name: string
+          profile_image_url?: string | null
+          slug: string
+          user_id: string
+        }
+        Update: {
+          abn?: string
+          acn?: string | null
+          cover_image_url?: string | null
+          name?: string
+          profile_image_url?: string | null
+          slug?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_providers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_providers_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       users: {
         Row: {
           id: string
+          roles: string[] | null
           stripe_account_id: string | null
           stripe_customer_id: string | null
         }
         Insert: {
           id: string
+          roles?: string[] | null
           stripe_account_id?: string | null
           stripe_customer_id?: string | null
         }
         Update: {
           id?: string
+          roles?: string[] | null
           stripe_account_id?: string | null
           stripe_customer_id?: string | null
         }
