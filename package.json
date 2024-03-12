@@ -11,7 +11,9 @@
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "supabase:start": "npx supabase start",
-    "supabase:stop": "npx supabase stop"
+    "supabase:stop": "npx supabase stop",
+    "supabase:db-push": "npx supabase db push",
+    "supabase:generate-types": "npx supabase gen types typescript --project-id $PROJECT_REF --schema public > src/types/supabase.ts"
   },
   "dependencies": {
     "@changesets/cli": "^2.27.1",
@@ -19,8 +21,10 @@
     "@supabase/supabase-js": "^2.39.7",
     "geist": "^1.2.2",
     "next": "14.1.2",
+    "pino": "^8.19.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "stripe": "^14.19.0"
   },
   "devDependencies": {
     "@testing-library/react": "^14.2.1",
