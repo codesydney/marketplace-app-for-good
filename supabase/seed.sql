@@ -23,4 +23,20 @@ INSERT INTO customers (user_id, preferred_name, profile_picture)
 VALUES
   ('00c89a1b-9c9c-41d5-9b42-60a79b748194', 'John', 'https://randomuser.me/api/portraits/men/93.jpg');
 
+INSERT INTO tasks (id, customer_id)
+VALUES
+  ('d8d504f6-57ed-4e97-b5c4-31454b366324', '00c89a1b-9c9c-41d5-9b42-60a79b748194');
+
+INSERT INTO quotes (id, service_provider_id)
+VALUES
+  ('b656f635-6a98-43e5-8f5c-c9238b133e31', '5004a761-60f9-4f57-ab5e-6a94df5d2177');
+
+INSERT INTO threads (id, service_provider_id, customer_id)
+VALUES
+  ('1e2ab0e9-8bf2-4a58-b258-08a3ec3a50fe', '5004a761-60f9-4f57-ab5e-6a94df5d2177', '00c89a1b-9c9c-41d5-9b42-60a79b748194');
+
+INSERT INTO messages (thread_id, sender_id, recipient_id, content, sent_at)
+VALUES
+  ('1e2ab0e9-8bf2-4a58-b258-08a3ec3a50fe', '5004a761-60f9-4f57-ab5e-6a94df5d2177', '00c89a1b-9c9c-41d5-9b42-60a79b748194', 'Hello, I am clean this for $200.', timezone('utc'::text, now()));
+
 COMMIT;
