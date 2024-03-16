@@ -9,32 +9,114 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      service_providers: {
+      customers: {
         Row: {
-          abn: string
-          acn: string | null
-          cover_image_url: string | null
-          name: string
-          profile_image_url: string | null
-          slug: string
+          preferred_name: string
+          profile_picture: string | null
           user_id: string
         }
         Insert: {
-          abn: string
-          acn?: string | null
-          cover_image_url?: string | null
-          name: string
-          profile_image_url?: string | null
-          slug: string
+          preferred_name: string
+          profile_picture?: string | null
           user_id: string
         }
         Update: {
-          abn?: string
-          acn?: string | null
-          cover_image_url?: string | null
-          name?: string
-          profile_image_url?: string | null
-          slug?: string
+          preferred_name?: string
+          profile_picture?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      messages: {
+        Row: {
+          content: string
+          id: number
+          recipient_id: string
+          sender_id: string
+          sent_at: string
+          status: string
+          thread_id: string
+        }
+        Insert: {
+          content: string
+          id?: number
+          recipient_id: string
+          sender_id: string
+          sent_at?: string
+          status?: string
+          thread_id: string
+        }
+        Update: {
+          content?: string
+          id?: number
+          recipient_id?: string
+          sender_id?: string
+          sent_at?: string
+          status?: string
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "threads"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      quotes: {
+        Row: {
+          id: string
+          service_provider_id: string
+        }
+        Insert: {
+          id: string
+          service_provider_id: string
+        }
+        Update: {
+          id?: string
+          service_provider_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotes_service_provider_id_fkey"
+            columns: ["service_provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_providers"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      service_providers: {
+        Row: {
+          preferred_name: string
+          profile_picture: string | null
+          user_id: string
+        }
+        Insert: {
+          preferred_name: string
+          profile_picture?: string | null
+          user_id: string
+        }
+        Update: {
+          preferred_name?: string
+          profile_picture?: string | null
           user_id?: string
         }
         Relationships: [
@@ -44,34 +126,80 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
+          }
+        ]
+      }
+      tasks: {
+        Row: {
+          customer_id: string
+          id: string
+        }
+        Insert: {
+          customer_id: string
+          id: string
+        }
+        Update: {
+          customer_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      threads: {
+        Row: {
+          created_at: string
+          customer_id: string
+          id: string
+          service_provider_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          id: string
+          service_provider_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          id?: string
+          service_provider_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "threads_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["user_id"]
           },
           {
-            foreignKeyName: "service_providers_user_id_fkey1"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: "threads_service_provider_id_fkey"
+            columns: ["service_provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_providers"
+            referencedColumns: ["user_id"]
           }
         ]
       }
       users: {
         Row: {
           id: string
-          roles: string[] | null
-          stripe_account_id: string | null
-          stripe_customer_id: string | null
         }
         Insert: {
           id: string
-          roles?: string[] | null
-          stripe_account_id?: string | null
-          stripe_customer_id?: string | null
         }
         Update: {
           id?: string
-          roles?: string[] | null
-          stripe_account_id?: string | null
-          stripe_customer_id?: string | null
         }
         Relationships: [
           {
