@@ -1,0 +1,26 @@
+BEGIN TRANSACTION;
+
+INSERT INTO auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, invited_at, confirmation_token, confirmation_sent_at, recovery_token, recovery_sent_at, email_change_token_new, email_change, email_change_sent_at, last_sign_in_at, raw_app_meta_data, raw_user_meta_data, is_super_admin, created_at, updated_at, phone, phone_confirmed_at, phone_change, phone_change_token, phone_change_sent_at, email_change_token_current, email_change_confirm_status, banned_until, reauthentication_token, reauthentication_sent_at)
+VALUES 
+  ('00000000-0000-0000-0000-000000000000', '5004a761-60f9-4f57-ab5e-6a94df5d2177', 'authenticated', 'authenticated', 'provider@email.com',  extensions.crypt('password', extensions.gen_salt('bf')), timezone('utc'::text, now()), NULL, '', NULL, '', NULL, '', '', NULL, NULL, NULL, NULL, NULL, timezone('utc'::text, now()), timezone('utc'::text, now()), NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL),
+  ('00000000-0000-0000-0000-000000000000', '00c89a1b-9c9c-41d5-9b42-60a79b748194', 'authenticated', 'authenticated', 'customer@email.com',  extensions.crypt('password', extensions.gen_salt('bf')), timezone('utc'::text, now()), NULL, '', NULL, '', NULL, '', '', NULL, NULL, NULL, NULL, NULL, timezone('utc'::text, now()), timezone('utc'::text, now()), NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL);
+
+INSERT INTO auth.identities (id,user_id,identity_data,provider,last_sign_in_at,created_at,updated_at)
+VALUES 
+  ('f1fa0569-bd45-4462-83df-189b0efb3e09', '5004a761-60f9-4f57-ab5e-6a94df5d2177'::uuid, '{"sub": "5004a761-60f9-4f57-ab5e-6a94df5d2177"}', 'email', timezone('utc'::text, now()), timezone('utc'::text, now()), timezone('utc'::text, now())),
+  ('8cb4030c-e973-4955-9401-69fe91b9682a', '00c89a1b-9c9c-41d5-9b42-60a79b748194'::uuid, '{"sub": "00c89a1b-9c9c-41d5-9b42-60a79b748194"}', 'email', timezone('utc'::text, now()), timezone('utc'::text, now()), timezone('utc'::text, now()))
+
+INSERT INTO public.users (id, stripe_customer_id, stripe_account_id, roles)
+VALUES
+  ('5004a761-60f9-4f57-ab5e-6a94df5d2177', null, null, ARRAY['customer', 'service_provider']),
+  ('00c89a1b-9c9c-41d5-9b42-60a79b748194', null, null, ARRAY['customer']);
+
+INSERT INTO public.service_providers (user_id, name, slug, profile_image_url, cover_image_url, abn, acn)
+VALUES
+  ('5004a761-60f9-4f57-ab5e-6a94df5d2177', 'Sam''s Cleaning', 'sams-cleaning', null, null, '12345678901', null);
+
+INSERT INTO public.service_provider_descriptions (service_provider_id, "description")
+VALUES
+  ('5004a761-60f9-4f57-ab5e-6a94df5d2177', 'Sam''s Cleaning is a professional cleaning service dedicated to delivering top-notch cleaning solutions for residential and commercial properties. With years of experience in the industry, we pride ourselves on our attention to detail, reliability, and customer satisfaction.');
+
+COMMIT;
