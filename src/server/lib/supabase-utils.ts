@@ -1,4 +1,4 @@
-import { Database } from "../../types/supabase";
+import { Database } from "../../types/supabase-generated";
 
 export type SupabaseInsertWebhookEvent<
   TTable extends keyof Database["public"]["Tables"]

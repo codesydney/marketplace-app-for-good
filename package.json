@@ -13,7 +13,7 @@
     "supabase:start": "npx supabase start",
     "supabase:stop": "npx supabase stop",
     "supabase:db-push": "npx supabase db push",
-    "supabase:generate-types": "npx supabase gen types typescript --project-id $PROJECT_REF --schema public > src/types/supabase.ts"
+    "supabase:generate-types": "npx supabase gen types typescript --project-id $PROJECT_REF --schema public > src/types/supabase-generated.ts"
   },
   "dependencies": {
     "@changesets/cli": "^2.27.1",
