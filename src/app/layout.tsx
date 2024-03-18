@@ -2,8 +2,8 @@ import "@radix-ui/themes/styles.css";
 import "./globals.css";
 
 import { GeistSans } from "geist/font/sans";
-import { Theme } from "@radix-ui/themes";
 import AuthButton from "@/components/AuthButton";
+import { RootProviders } from "./providers";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -23,16 +23,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
-        <Theme>
+        <RootProviders>
           <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
             <div className="w-full flex justify-end items-center p-3">
               <AuthButton />
             </div>
           </nav>
+
           <main className="min-h-screen flex flex-col items-center">
             {children}
           </main>
-        </Theme>
+        </RootProviders>
       </body>
     </html>
   );
