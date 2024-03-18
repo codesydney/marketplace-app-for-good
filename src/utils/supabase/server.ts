@@ -35,3 +35,5 @@ export const createClient = () => {
     }
   );
 };
+
+export type SupabaseClient = ReturnType<typeof createClient>;
