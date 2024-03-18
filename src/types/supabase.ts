@@ -1,3 +1,4 @@
+export * from "./supabase-generated";
 import { Database } from "./supabase-generated";
 
 type Row<TTable extends keyof Database["public"]["Tables"]> =
