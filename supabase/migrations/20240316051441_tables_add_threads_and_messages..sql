@@ -12,8 +12,15 @@ CREATE TABLE IF NOT EXISTS threads (
 ALTER TABLE threads
   ENABLE ROW LEVEL SECURITY;
 
+-- Customer Policies for threads
 CREATE POLICY "Can view own customer threads" ON threads
   FOR SELECT USING (auth.uid() = customer_id);
+CREATE POLICY "Can update own customer threads" ON threads
+  FOR UPDATE USING (auth.uid() = customer_id);
+
+-- Service Provider Policies for threads 
+CREATE POLICY "Can view own service provider threads" ON threads
+  FOR SELECT USING (auth.uid() = service_provider_id);
 CREATE POLICY "Can update own service provider threads" ON threads
   FOR UPDATE USING (auth.uid() = service_provider_id);
 
@@ -33,7 +40,14 @@ CREATE TABLE IF NOT EXISTS messages (
 ALTER TABLE messages
   ENABLE ROW LEVEL SECURITY;
 
+-- Sender Policies for messages
 CREATE POLICY "Can view own sent messages" ON messages
   FOR SELECT USING (auth.uid() = sender_id);
+CREATE POLICY "Can update own sent messages" ON messages
+  FOR UPDATE USING (auth.uid() = sender_id);
+
+-- Recipient Policies for messages
+CREATE POLICY "Can view own received messages" ON messages
+  FOR SELECT USING (auth.uid() = recipient_id);
 CREATE POLICY "Can update own received messages" ON messages
   FOR UPDATE USING (auth.uid() = recipient_id);
