@@ -3,6 +3,7 @@ import {
   transformThreadsToChatConversations,
   transformMessagesToChatMessages,
 } from "./mappers";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export const getServiceProvider = async (
   userId: string,
@@ -66,37 +67,50 @@ export const getMessagesFromThread = async (
 };
 
 export async function getThreadsData(userId: string, supabase: SupabaseClient) {
-  const { data, error } = await getServiceProviderThreads(userId, supabase);
+  const threads = await getServiceProviderThreads(userId, supabase);
 
-  if (error) {
-    return Promise.reject(error);
+  if (threads.error) {
+    return threads;
   }
 
   return {
     error: null,
-    data: data?.map(transformThreadsToChatConversations),
+    data: threads.data?.map(transformThreadsToChatConversations),
   };
 }
 
-export async function getMessageData(threadId: string) {
+export async function getMessageData(userId: string, threadId: string) {
   const supabase = createClient();
+  const messages = await getMessagesFromThread(threadId, supabase);
 
-  const userResult = await supabase.auth.getUser();
-
-  if (userResult.error) {
-    return Promise.reject(userResult.error);
-  }
-
-  const userId = userResult.data.user.id;
-
-  const { data, error } = await getMessagesFromThread(threadId, supabase);
-
-  if (error) {
-    return Promise.reject(error);
+  if (messages.error) {
+    return messages;
   }
 
   return {
     error: null,
-    data: data?.map((item) => transformMessagesToChatMessages(userId, item)),
+    data: messages.data?.map((item) =>
+      transformMessagesToChatMessages(userId, item)
+    ),
   };
+}
+
+/**
+ * Wraps errors returned as values in a rejected promise, otherwise returns the data.
+ * Used to make supabase results compatible with tanstack-query functions
+ */
+export async function handleErrorUnion<TData>({
+  data,
+  error,
+}:
+  | { error: PostgrestError; data: null }
+  | {
+      error: null;
+      data: TData;
+    }) {
+  if (error) {
+    return Promise.reject(error);
+  }
+
+  return data;
 }

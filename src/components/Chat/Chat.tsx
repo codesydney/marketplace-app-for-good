@@ -18,7 +18,12 @@ import {
   UserStatus,
 } from "@chatscope/chat-ui-kit-react";
 import { useQuery } from "@tanstack/react-query";
-import { getMessageData, getServiceProvider, getThreadsData } from "./queries";
+import {
+  getMessageData,
+  getServiceProvider,
+  getThreadsData,
+  handleErrorUnion,
+} from "./queries";
 import { memo } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { ServiceProvider, Customer } from "@/types/supabase";
@@ -67,7 +72,7 @@ export const Chat = () => {
     error: serviceProviderError,
   } = useQuery({
     queryKey: ["service-provider"],
-    queryFn: () => getServiceProvider(userId!, supabase),
+    queryFn: () => getServiceProvider(userId!, supabase).then(handleErrorUnion),
     enabled: !!userId,
   });
 
@@ -77,7 +82,7 @@ export const Chat = () => {
     error: threadsError,
   } = useQuery({
     queryKey: ["threads"],
-    queryFn: () => getThreadsData(userId!, supabase),
+    queryFn: () => getThreadsData(userId!, supabase).then(handleErrorUnion),
     enabled: !!userId,
   });
 
@@ -85,14 +90,14 @@ export const Chat = () => {
     return <div>Loading...</div>;
   }
 
-  const activeConversation = threadsData.data[0];
+  const activeConversation = threadsData[0];
 
   return (
     <MainContainer responsive style={MainContainerStyles}>
       <Sidebar position="left">
         <Search placeholder="Search..." />
         <ConversationList>
-          {threadsData?.data?.map((item) => (
+          {threadsData?.map((item) => (
             <Conversation
               key={item.name}
               info={item.lastMessage}
@@ -107,10 +112,10 @@ export const Chat = () => {
           ))}
         </ConversationList>
       </Sidebar>
-      {serviceProviderData?.data && (
+      {serviceProviderData && (
         <MessagesMemo
           conversation={activeConversation}
-          userDetails={serviceProviderData.data}
+          userDetails={serviceProviderData}
         />
       )}
     </MainContainer>
@@ -130,7 +135,8 @@ const Messages = ({
     error: messagesError,
   } = useQuery({
     queryKey: ["messages"],
-    queryFn: async () => getMessageData(conversation.threadId),
+    queryFn: async () =>
+      getMessageData(userDetails.user_id, conversation.threadId),
   });
 
   return (
