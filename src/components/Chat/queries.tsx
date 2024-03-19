@@ -3,7 +3,20 @@ import {
   transformThreadsToChatConversations,
   transformMessagesToChatMessages,
 } from "./mappers";
-import { PostgrestError } from "@supabase/supabase-js";
+import { PostgrestError, User } from "@supabase/supabase-js";
+
+const isCustomer = (user: User) => user.user_metadata.roles.customer === true;
+const isServiceProvider = (user: User) =>
+  user.user_metadata.roles.service_provider === true;
+
+export const getUserChatProfile = async (
+  user: User,
+  supabaseClient: SupabaseClient
+) => {
+  if (isCustomer(user)) return getCustomer(user.id, supabaseClient);
+
+  return getServiceProvider(user.id, supabaseClient);
+};
 
 export const getServiceProvider = async (
   userId: string,
@@ -27,6 +40,12 @@ export const getCustomer = async (
     .single();
 };
 
+export type CustomerThreadsResult = Awaited<
+  ReturnType<typeof getCustomerThreads>
+>;
+
+export type CustomerThread = NonNullable<CustomerThreadsResult["data"]>[number];
+
 export const getCustomerThreads = async (
   userId: string,
   supabaseClient: SupabaseClient
@@ -41,7 +60,7 @@ export type ServiceProviderThreadsResult = Awaited<
   ReturnType<typeof getServiceProviderThreads>
 >;
 
-export type ServiceProviderThreads = NonNullable<
+export type ServiceProviderThread = NonNullable<
   ServiceProviderThreadsResult["data"]
 >[number];
 
@@ -59,15 +78,13 @@ export const getMessagesFromThread = async (
   theadId: string,
   supabaseClient: SupabaseClient
 ) => {
-  return supabaseClient
-    .from("messages")
-    .select("*")
-    .eq("thread_id", theadId)
-    .order("sent_at", { ascending: false });
+  return supabaseClient.from("messages").select("*").eq("thread_id", theadId);
 };
 
-export async function getThreadsData(userId: string, supabase: SupabaseClient) {
-  const threads = await getServiceProviderThreads(userId, supabase);
+export async function getThreadsData(user: User, supabase: SupabaseClient) {
+  const threads = isCustomer(user)
+    ? await getCustomerThreads(user.id, supabase)
+    : await getServiceProviderThreads(user.id, supabase);
 
   if (threads.error) {
     return threads;

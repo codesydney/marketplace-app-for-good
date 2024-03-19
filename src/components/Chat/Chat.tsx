@@ -13,7 +13,7 @@ import {
   MessageList,
   TypingIndicator,
   MessageSeparator,
-  Message,
+  Message as ChatMessage,
   MessageInput,
   UserStatus,
 } from "@chatscope/chat-ui-kit-react";
@@ -22,15 +22,18 @@ import {
   getMessageData,
   getServiceProvider,
   getThreadsData,
+  getUserChatProfile,
   handleErrorUnion,
 } from "./queries";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { ServiceProvider, Customer } from "@/types/supabase";
+import { ServiceProvider, Customer, Message } from "@/types/supabase";
 
 const MainContainerStyles = { height: "90vh" };
 
 export type Conversation = {
+  serviceProviderId: string;
+  customerId: string;
   threadId: string;
   lastMessage: string;
   lastSenderName: string;
@@ -39,8 +42,9 @@ export type Conversation = {
   status: UserStatus;
 };
 
-export type Messages = {
+export type ChatMessage = {
   model: {
+    id: string;
     direction: "incoming" | "outgoing";
     message: string;
     position: "single";
@@ -54,7 +58,9 @@ export type Messages = {
 export const Chat = () => {
   const supabase = createClient();
 
-  const { data: userId, error: userError } = useQuery({
+  const [activeConversation, setActiveConversation] = useState<Conversation>();
+
+  const { data: user, error: userError } = useQuery({
     queryKey: ["userId"],
     queryFn: async () => {
       const { data, error } = await supabase.auth.getSession();
@@ -62,18 +68,18 @@ export const Chat = () => {
         return Promise.reject(error);
       }
 
-      return data.session?.user.id;
+      return data.session?.user;
     },
   });
 
   const {
-    data: serviceProviderData,
-    isLoading: isServiceProviderLoading,
-    error: serviceProviderError,
+    data: userProfileData,
+    isLoading: isUserProfileLoading,
+    error: userProfileError,
   } = useQuery({
-    queryKey: ["service-provider"],
-    queryFn: () => getServiceProvider(userId!, supabase).then(handleErrorUnion),
-    enabled: !!userId,
+    queryKey: ["user-profile"],
+    queryFn: () => getUserChatProfile(user!, supabase).then(handleErrorUnion),
+    enabled: !!user,
   });
 
   const {
@@ -82,15 +88,13 @@ export const Chat = () => {
     error: threadsError,
   } = useQuery({
     queryKey: ["threads"],
-    queryFn: () => getThreadsData(userId!, supabase).then(handleErrorUnion),
-    enabled: !!userId,
+    queryFn: () => getThreadsData(user!, supabase).then(handleErrorUnion),
+    enabled: !!user,
   });
 
   if (!threadsData) {
     return <div>Loading...</div>;
   }
-
-  const activeConversation = threadsData[0];
 
   return (
     <MainContainer responsive style={MainContainerStyles}>
@@ -102,6 +106,7 @@ export const Chat = () => {
               key={item.name}
               info={item.lastMessage}
               name={item.name}
+              onClick={() => setActiveConversation(item)}
             >
               <Avatar
                 name={item.name}
@@ -112,10 +117,10 @@ export const Chat = () => {
           ))}
         </ConversationList>
       </Sidebar>
-      {serviceProviderData && (
+      {userProfileData && activeConversation && (
         <MessagesMemo
           conversation={activeConversation}
-          userDetails={serviceProviderData}
+          userDetails={userProfileData}
         />
       )}
     </MainContainer>
@@ -129,6 +134,8 @@ const Messages = ({
   conversation: Conversation;
   userDetails: ServiceProvider | Customer;
 }) => {
+  const supabase = createClient();
+
   const {
     data: messagesData,
     isLoading: areMessagesLoading,
@@ -136,8 +143,22 @@ const Messages = ({
   } = useQuery({
     queryKey: ["messages"],
     queryFn: async () =>
-      getMessageData(userDetails.user_id, conversation.threadId),
+      getMessageData(userDetails.user_id, conversation.threadId).then(
+        handleErrorUnion
+      ),
   });
+
+  const handleSend = async (text: string) => {
+    const message: Omit<Message, "id" | "status"> = {
+      content: text,
+      recipient_id: conversation.customerId,
+      sender_id: userDetails.user_id,
+      sent_at: new Date().toISOString(),
+      thread_id: conversation.threadId,
+    };
+
+    await supabase.from("messages").insert([message]);
+  };
 
   return (
     <ChatContainer>
@@ -156,8 +177,8 @@ const Messages = ({
       // typingIndicator={<TypingIndicator content="Zoe is typing" />}
       >
         {/* <MessageSeparator content="Saturday, 30 November 2019" /> */}
-        {messagesData?.data?.map((item) => (
-          <Message key={item.model.sender} model={item.model}>
+        {messagesData?.map((item) => (
+          <ChatMessage key={item.model.sender} model={item.model}>
             {item.showAvatar && item.isUser && (
               <Avatar
                 name={userDetails.preferred_name}
@@ -167,10 +188,10 @@ const Messages = ({
             {item.showAvatar && !item.isUser && (
               <Avatar name={conversation.name} src={conversation.avatar} />
             )}
-          </Message>
+          </ChatMessage>
         ))}
       </MessageList>
-      <MessageInput placeholder="Type message here" />
+      <MessageInput placeholder="Type message here" onSend={handleSend} />
     </ChatContainer>
   );
 };
