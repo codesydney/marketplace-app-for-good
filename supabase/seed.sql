@@ -37,6 +37,8 @@ VALUES
 
 INSERT INTO messages (thread_id, sender_id, recipient_id, content, sent_at)
 VALUES
-  ('1e2ab0e9-8bf2-4a58-b258-08a3ec3a50fe', '5004a761-60f9-4f57-ab5e-6a94df5d2177', '00c89a1b-9c9c-41d5-9b42-60a79b748194', 'Hello, I am clean this for $200.', timezone('utc'::text, now()));
+  ('1e2ab0e9-8bf2-4a58-b258-08a3ec3a50fe', '5004a761-60f9-4f57-ab5e-6a94df5d2177', '00c89a1b-9c9c-41d5-9b42-60a79b748194', 'Hello, I can clean this for $200.', '2022-01-01 09:00:00'),
+  ('1e2ab0e9-8bf2-4a58-b258-08a3ec3a50fe', '00c89a1b-9c9c-41d5-9b42-60a79b748194', '5004a761-60f9-4f57-ab5e-6a94df5d2177', 'When can you start?', '2022-01-01 09:30:00'),
+  ('1e2ab0e9-8bf2-4a58-b258-08a3ec3a50fe', '5004a761-60f9-4f57-ab5e-6a94df5d2177', '00c89a1b-9c9c-41d5-9b42-60a79b748194', 'We can get it done on Friday morning. Are you good for Friday?', '2022-01-01 10:00:00');
 
 COMMIT;
