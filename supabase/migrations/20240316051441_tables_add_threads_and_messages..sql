@@ -41,15 +41,9 @@ ALTER TABLE messages
   ENABLE ROW LEVEL SECURITY;
 
 -- Sender Policies for messages
-CREATE POLICY "Can view own sent messages" ON messages
-  FOR SELECT USING (auth.uid() = sender_id);
+CREATE POLICY "Can view sent or received messages" ON messages
+  FOR SELECT USING (auth.uid() = sender_id or auth.uid() = recipient_id);
 CREATE POLICY "Can update own sent messages" ON messages
   FOR UPDATE USING (auth.uid() = sender_id);
 CREATE POLICY "Can create sent messages" ON messages
   FOR INSERT WITH CHECK (auth.uid() = sender_id);
-
--- Recipient Policies for messages
-CREATE POLICY "Can view own received messages" ON messages
-  FOR SELECT USING (auth.uid() = recipient_id);
-CREATE POLICY "Can update own received messages" ON messages
-  FOR UPDATE USING (auth.uid() = recipient_id);
