@@ -5,8 +5,9 @@ import {
 } from "./mappers";
 import { PostgrestError, User } from "@supabase/supabase-js";
 
-const isCustomer = (user: User) => user.user_metadata.roles.customer === true;
-const isServiceProvider = (user: User) =>
+export const isCustomer = (user: User) =>
+  user.user_metadata.roles.customer === true;
+export const isServiceProvider = (user: User) =>
   user.user_metadata.roles.service_provider === true;
 
 export const getUserChatProfile = async (

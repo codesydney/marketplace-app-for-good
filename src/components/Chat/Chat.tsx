@@ -17,17 +17,18 @@ import {
   MessageInput,
   UserStatus,
 } from "@chatscope/chat-ui-kit-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getMessageData,
-  getServiceProvider,
   getThreadsData,
   getUserChatProfile,
   handleErrorUnion,
+  isServiceProvider,
 } from "./queries";
 import { memo, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { ServiceProvider, Customer, Message } from "@/types/supabase";
+import { User } from "@supabase/supabase-js";
 
 const MainContainerStyles = { height: "90vh" };
 
@@ -61,7 +62,7 @@ export const Chat = () => {
   const [activeConversation, setActiveConversation] = useState<Conversation>();
 
   const { data: user, error: userError } = useQuery({
-    queryKey: ["userId"],
+    queryKey: ["user"],
     queryFn: async () => {
       const { data, error } = await supabase.auth.getSession();
       if (error) {
@@ -135,6 +136,7 @@ const Messages = ({
   userDetails: ServiceProvider | Customer;
 }) => {
   const supabase = createClient();
+  const queryClient = useQueryClient();
 
   const {
     data: messagesData,
@@ -149,6 +151,13 @@ const Messages = ({
   });
 
   const handleSend = async (text: string) => {
+    const user = queryClient.getQueryData<User>(["user"]);
+
+    if (!user) {
+      // todo handle user not logged in
+      return;
+    }
+
     const message: Omit<Message, "id" | "status"> = {
       content: text,
       recipient_id: conversation.customerId,
@@ -156,6 +165,11 @@ const Messages = ({
       sent_at: new Date().toISOString(),
       thread_id: conversation.threadId,
     };
+
+    if (isServiceProvider(user)) {
+      message.sender_id = userDetails.user_id;
+      message.recipient_id = conversation.customerId;
+    }
 
     await supabase.from("messages").insert([message]);
   };
