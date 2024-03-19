@@ -93,6 +93,18 @@ export const Chat = () => {
     enabled: !!user,
   });
 
+  supabase
+    .channel("threads")
+    .on(
+      "postgres_changes",
+      { event: "UPDATE", schema: "public", table: "threads" },
+      (payload) => {
+        console.log("Change received!");
+        console.log({ payload });
+      }
+    )
+    .subscribe();
+
   if (!threadsData) {
     return <div>Loading...</div>;
   }
