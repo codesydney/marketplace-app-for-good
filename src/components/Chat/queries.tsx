@@ -13,9 +13,10 @@ export const getUserChatProfile = async (
   user: User,
   supabaseClient: SupabaseClient
 ) => {
-  if (isCustomer(user)) return getCustomer(user.id, supabaseClient);
+  if (isServiceProvider(user))
+    return getServiceProvider(user.id, supabaseClient);
 
-  return getServiceProvider(user.id, supabaseClient);
+  return getCustomer(user.id, supabaseClient);
 };
 
 export const getServiceProvider = async (
