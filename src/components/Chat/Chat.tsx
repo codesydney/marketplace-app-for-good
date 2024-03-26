@@ -39,7 +39,7 @@ export const Chat = () => {
     threads,
     updateThreads,
     updateMessages,
-    activeThread,
+    activeThreadId,
     setActiveThread,
   } = useChatStore();
 
@@ -86,14 +86,14 @@ export const Chat = () => {
     queryFn: async () =>
       await getMessageData({
         user_id: userProfileData?.user_id!,
-        thread_id: activeThread!,
+        thread_id: activeThreadId!,
       })
         .then(handleErrorUnion)
         .then((data) => {
           updateMessages(data);
           return data; // returning this allows data to be seen in the React DevTools
         }),
-    enabled: threadQuerySuccess && !!activeThread && !!userProfileData,
+    enabled: threadQuerySuccess && !!activeThreadId && !!userProfileData,
   });
 
   supabase
@@ -128,7 +128,7 @@ export const Chat = () => {
           ))}
         </ConversationList>
       </Sidebar>
-      {userProfileData && activeThread && (
+      {userProfileData && activeThreadId && (
         <MessagesMemo userDetails={userProfileData} />
       )}
     </MainContainer>
@@ -143,11 +143,11 @@ const Messages = ({
   const supabase = createClient();
   const queryClient = useQueryClient();
   const activeThread = useChatStore((state) => {
-    if (!state.activeThread) {
+    if (!state.activeThreadId) {
       return null;
     }
 
-    return state.threads[state.activeThread];
+    return state.threads[state.activeThreadId];
   });
 
   const messages = useChatStore((state) => {

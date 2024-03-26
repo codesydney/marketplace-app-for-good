@@ -42,7 +42,7 @@ export type CustomerThreadsResult = Awaited<
   ReturnType<typeof getCustomerThreads>
 >;
 
-export type CustomerThread = NonNullable<CustomerThreadsResult["data"]>[number];
+export type ThreadResult = NonNullable<CustomerThreadsResult["data"]>[number];
 
 export const getCustomerThreads = async (
   userId: string,

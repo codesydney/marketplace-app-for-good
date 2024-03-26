@@ -1,29 +1,29 @@
-import { CustomerThread } from "@/components/Chat/queries";
+import { ThreadResult } from "@/components/Chat/queries";
 import { Message } from "@/types/supabase";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 // Define the type for the chat state
 type ChatState = {
-  activeThread: string | null;
-  threads: Record<CustomerThread["id"], CustomerThread>;
+  activeThreadId: string | null;
+  threads: Record<ThreadResult["id"], ThreadResult>;
   messages: Record<Message["thread_id"], Record<Message["id"], Message>>;
 };
 
 type ChatActions = {
   setActiveThread: (threadId: string) => void;
-  updateThreads: (threads: CustomerThread[]) => void;
+  updateThreads: (threads: ThreadResult[]) => void;
   updateMessages: (messages: Message[]) => void;
 };
 
 export const useChatStore = create<ChatState & ChatActions>()(
   immer((set) => ({
-    activeThread: null,
+    activeThreadId: null,
     threads: {},
     messages: {},
     setActiveThread: (threadId) => {
       set((state: ChatState) => {
-        state.activeThread = threadId;
+        state.activeThreadId = threadId;
       });
     },
     updateThreads: (threads) => {
