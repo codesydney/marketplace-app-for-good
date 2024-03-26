@@ -54,7 +54,7 @@ export const getCustomerThreads = async (
 ) => {
   return supabaseClient
     .from("threads")
-    .select("*, service_providers(*)")
+    .select("*, other_user:service_providers(*)")
     .eq("customer_id", userId);
 };
 
@@ -72,18 +72,29 @@ export const getServiceProviderThreads = async (
 ) => {
   return supabaseClient
     .from("threads")
-    .select("*, customers(*)")
+    .select("*, other_user:customers(*)")
     .eq("service_provider_id", userId);
 };
 
 export const getMessagesFromThread = async (
   theadId: string,
-  supabaseClient: SupabaseClient
+  supabaseClient: SupabaseClient,
+  options?: {
+    last_message_id?: number;
+  }
 ) => {
+  if (options?.last_message_id) {
+    return supabaseClient
+      .from("messages")
+      .select("*")
+      .eq("thread_id", theadId)
+      .gt("id", options?.last_message_id);
+  }
+
   return supabaseClient.from("messages").select("*").eq("thread_id", theadId);
 };
 
-export async function getThreadsData(user: User, supabase: SupabaseClient) {
+export async function getThreads(user: User, supabase: SupabaseClient) {
   const threads = isCustomer(user)
     ? await getCustomerThreads(user.id, supabase)
     : await getServiceProviderThreads(user.id, supabase);
@@ -94,13 +105,19 @@ export async function getThreadsData(user: User, supabase: SupabaseClient) {
 
   return {
     error: null,
-    data: threads.data?.map(transformThreadsToChatConversations),
+    data: threads.data,
   };
 }
 
-export async function getMessageData(userId: string, threadId: string) {
+export async function getMessageData(params: {
+  user_id: string;
+  thread_id: string;
+  last_message_id?: number;
+}) {
   const supabase = createClient();
-  const messages = await getMessagesFromThread(threadId, supabase);
+  const messages = await getMessagesFromThread(params.thread_id, supabase, {
+    last_message_id: params?.last_message_id,
+  });
 
   if (messages.error) {
     return messages;
@@ -108,9 +125,7 @@ export async function getMessageData(userId: string, threadId: string) {
 
   return {
     error: null,
-    data: messages.data?.map((item) =>
-      transformMessagesToChatMessages(userId, item)
-    ),
+    data: messages.data,
   };
 }
 
