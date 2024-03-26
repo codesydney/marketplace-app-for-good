@@ -1,8 +1,4 @@
 import { SupabaseClient, createClient } from "@/utils/supabase/client";
-import {
-  transformThreadsToChatConversations,
-  transformMessagesToChatMessages,
-} from "./mappers";
 import { PostgrestError, User } from "@supabase/supabase-js";
 
 export const isCustomer = (user: User) =>
