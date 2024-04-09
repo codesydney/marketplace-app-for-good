@@ -40,7 +40,7 @@ type CreateCustomerResult =
  * Creates a new Stripe Customer for the given user.
  * @param userId
  */
-export async function createStripeCustomerOnNewUser(
+async function createStripeCustomerOnNewUser(
   userId: string
 ): Promise<CreateCustomerResult> {
   const authUserResult = await getAuthUserEmail(userId);
