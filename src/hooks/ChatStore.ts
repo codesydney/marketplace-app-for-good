@@ -46,3 +46,14 @@ export const useChatStore = create<ChatState & ChatActions>()(
     },
   }))
 );
+
+export const useActiveThread = () => {
+  const activeThreadId = useChatStore((state) => state.activeThreadId);
+  const threads = useChatStore((state) => state.threads);
+
+  if (!activeThreadId) {
+    return null;
+  }
+
+  return threads[activeThreadId];
+};

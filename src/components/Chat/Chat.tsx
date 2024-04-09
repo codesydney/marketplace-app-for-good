@@ -29,7 +29,7 @@ import { memo } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { ServiceProvider, Customer, Message } from "@/types/supabase";
 import { User } from "@supabase/supabase-js";
-import { useChatStore } from "@/hooks/ChatStore";
+import { useActiveThread, useChatStore } from "@/hooks/ChatStore";
 
 const MainContainerStyles = { height: "90vh" };
 
