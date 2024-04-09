@@ -22,6 +22,8 @@ jobs:
         run: pnpm install
 
       - name: Building App
+        env:
+          STRIPE_SECRET_KEY: ${secrets.STRIPE_SECRET_KEY}
         run: pnpm build
 
       - name: Running Tests
