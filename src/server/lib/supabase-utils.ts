@@ -1,7 +1,7 @@
 import { Database } from "../../types/supabase";
 
 export type SupabaseInsertWebhookEvent<
-  TTable extends keyof Database["public"]["Tables"]
+  TTable extends keyof Database["public"]["Tables"],
 > = {
   type: "INSERT";
   table: TTable;

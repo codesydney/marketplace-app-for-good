@@ -41,7 +41,7 @@ type CreateCustomerResult =
  * @param userId
  */
 async function createStripeCustomerOnNewUser(
-  userId: string
+  userId: string,
 ): Promise<CreateCustomerResult> {
   const authUserResult = await getAuthUserEmail(userId);
   if (authUserResult.error) {
@@ -106,14 +106,14 @@ async function getPublicUser(userId: string) {
     .from("users")
     .select(
       `id, 
-      stripe_customer_id`
+      stripe_customer_id`,
     )
     .eq("id", userId)
     .single();
 }
 
 async function createStripeCustomer(
-  email: string
+  email: string,
 ): Promise<
   | { error: Error; data: null }
   | { error: null; data: Awaited<ReturnType<typeof stripe.customers.create>> }
@@ -126,7 +126,7 @@ async function createStripeCustomer(
 
 async function updateStripeCustomerId(
   userId: string,
-  stripeCustomerId: string
+  stripeCustomerId: string,
 ) {
   return supabaseAdminClient
     .from("users")
