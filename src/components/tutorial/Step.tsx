@@ -1,9 +1,11 @@
+import { ReactNode } from 'react'
+
 export default function Step({
   title,
   children,
 }: {
-  title: string;
-  children: React.ReactNode;
+  title: string
+  children: ReactNode
 }) {
   return (
     <li className="mx-4">
@@ -20,5 +22,5 @@ export default function Step({
         {children}
       </div>
     </li>
-  );
+  )
 }
