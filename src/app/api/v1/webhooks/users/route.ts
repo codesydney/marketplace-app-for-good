@@ -1,11 +1,11 @@
-import { PostgrestError } from "@supabase/supabase-js";
+import { PostgrestError } from '@supabase/supabase-js';
 
-import { logger } from "@/server/lib/logger";
-import { SupabaseInsertWebhookEvent } from "@/server/lib/supabase-utils";
-import { stripe } from "@/server/services/stripe";
-import { supabaseAdminClient } from "@/server/services/supabase";
+import { logger } from '@/server/lib/logger';
+import { SupabaseInsertWebhookEvent } from '@/server/lib/supabase-utils';
+import { stripe } from '@/server/services/stripe';
+import { supabaseAdminClient } from '@/server/services/supabase';
 
-type InsertUsersEvent = SupabaseInsertWebhookEvent<"users">;
+type InsertUsersEvent = SupabaseInsertWebhookEvent<'users'>;
 
 /**
  * Handles webhook events when a new user is inserted into the public.users table.
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   const userId = body.record.id;
 
   const result = await createStripeCustomerOnNewUser(userId);
-  logger.debug(result, "Create Stripe Customer Result");
+  logger.debug(result, 'Create Stripe Customer Result');
 
   return Response.json(null, { status: 200 });
 }
@@ -93,7 +93,7 @@ async function getAuthUserEmail(userId: string) {
 
   if (!user?.email) {
     return {
-      error: new Error("Email missing from auth user"),
+      error: new Error('Email missing from auth user'),
       data: null,
     };
   }
@@ -103,12 +103,12 @@ async function getAuthUserEmail(userId: string) {
 
 async function getPublicUser(userId: string) {
   return supabaseAdminClient
-    .from("users")
+    .from('users')
     .select(
       `id, 
       stripe_customer_id`,
     )
-    .eq("id", userId)
+    .eq('id', userId)
     .single();
 }
 
@@ -120,8 +120,8 @@ async function createStripeCustomer(
 > {
   return stripe.customers
     .create({ email })
-    .then((customer) => ({ error: null, data: customer }))
-    .catch((error) => ({ error, data: null }));
+    .then(customer => ({ error: null, data: customer }))
+    .catch(error => ({ error, data: null }));
 }
 
 async function updateStripeCustomerId(
@@ -129,9 +129,9 @@ async function updateStripeCustomerId(
   stripeCustomerId: string,
 ) {
   return supabaseAdminClient
-    .from("users")
+    .from('users')
     .update({
       stripe_customer_id: stripeCustomerId,
     })
-    .eq("id", userId);
+    .eq('id', userId);
 }
