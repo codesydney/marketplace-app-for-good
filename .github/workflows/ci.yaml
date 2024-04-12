@@ -5,7 +5,6 @@ on: [push, workflow_dispatch]
 jobs:
   build-test-prettier:
     runs-on: ubuntu-latest
-    environment: main
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
