@@ -4,7 +4,7 @@
   "endOfLine": "lf",
   "proseWrap": "preserve",
   "quoteProps": "as-needed",
-  "semi": true,
+  "semi": false,
   "trailingComma": "all",
   "singleQuote": true,
   "printWidth": 80,

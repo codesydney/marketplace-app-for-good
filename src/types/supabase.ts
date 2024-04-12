@@ -4,100 +4,100 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
 
 export type Database = {
   public: {
     Tables: {
       service_providers: {
         Row: {
-          abn: string;
-          acn: string | null;
-          cover_image_url: string | null;
-          name: string;
-          profile_image_url: string | null;
-          slug: string;
-          user_id: string;
-        };
+          abn: string
+          acn: string | null
+          cover_image_url: string | null
+          name: string
+          profile_image_url: string | null
+          slug: string
+          user_id: string
+        }
         Insert: {
-          abn: string;
-          acn?: string | null;
-          cover_image_url?: string | null;
-          name: string;
-          profile_image_url?: string | null;
-          slug: string;
-          user_id: string;
-        };
+          abn: string
+          acn?: string | null
+          cover_image_url?: string | null
+          name: string
+          profile_image_url?: string | null
+          slug: string
+          user_id: string
+        }
         Update: {
-          abn?: string;
-          acn?: string | null;
-          cover_image_url?: string | null;
-          name?: string;
-          profile_image_url?: string | null;
-          slug?: string;
-          user_id?: string;
-        };
+          abn?: string
+          acn?: string | null
+          cover_image_url?: string | null
+          name?: string
+          profile_image_url?: string | null
+          slug?: string
+          user_id?: string
+        }
         Relationships: [
           {
-            foreignKeyName: 'service_providers_user_id_fkey';
-            columns: ['user_id'];
-            isOneToOne: true;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: 'service_providers_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: true
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: 'service_providers_user_id_fkey1';
-            columns: ['user_id'];
-            isOneToOne: true;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: 'service_providers_user_id_fkey1'
+            columns: ['user_id']
+            isOneToOne: true
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
-        ];
-      };
+        ]
+      }
       users: {
         Row: {
-          id: string;
-          roles: string[] | null;
-          stripe_account_id: string | null;
-          stripe_customer_id: string | null;
-        };
+          id: string
+          roles: string[] | null
+          stripe_account_id: string | null
+          stripe_customer_id: string | null
+        }
         Insert: {
-          id: string;
-          roles?: string[] | null;
-          stripe_account_id?: string | null;
-          stripe_customer_id?: string | null;
-        };
+          id: string
+          roles?: string[] | null
+          stripe_account_id?: string | null
+          stripe_customer_id?: string | null
+        }
         Update: {
-          id?: string;
-          roles?: string[] | null;
-          stripe_account_id?: string | null;
-          stripe_customer_id?: string | null;
-        };
+          id?: string
+          roles?: string[] | null
+          stripe_account_id?: string | null
+          stripe_customer_id?: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: 'users_id_fkey';
-            columns: ['id'];
-            isOneToOne: true;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: 'users_id_fkey'
+            columns: ['id']
+            isOneToOne: true
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
-        ];
-      };
-    };
+        ]
+      }
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Enums: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
 
 export type Tables<
   PublicTableNameOrOptions extends
@@ -110,7 +110,7 @@ export type Tables<
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
       Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
-      Row: infer R;
+      Row: infer R
     }
     ? R
     : never
@@ -118,11 +118,11 @@ export type Tables<
         Database['public']['Views'])
     ? (Database['public']['Tables'] &
         Database['public']['Views'])[PublicTableNameOrOptions] extends {
-        Row: infer R;
+        Row: infer R
       }
       ? R
       : never
-    : never;
+    : never
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
@@ -133,17 +133,17 @@ export type TablesInsert<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
-      Insert: infer I;
+      Insert: infer I
     }
     ? I
     : never
   : PublicTableNameOrOptions extends keyof Database['public']['Tables']
     ? Database['public']['Tables'][PublicTableNameOrOptions] extends {
-        Insert: infer I;
+        Insert: infer I
       }
       ? I
       : never
-    : never;
+    : never
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
@@ -154,17 +154,17 @@ export type TablesUpdate<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
-      Update: infer U;
+      Update: infer U
     }
     ? U
     : never
   : PublicTableNameOrOptions extends keyof Database['public']['Tables']
     ? Database['public']['Tables'][PublicTableNameOrOptions] extends {
-        Update: infer U;
+        Update: infer U
       }
       ? U
       : never
-    : never;
+    : never
 
 export type Enums<
   PublicEnumNameOrOptions extends
@@ -177,4 +177,4 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
   : PublicEnumNameOrOptions extends keyof Database['public']['Enums']
     ? Database['public']['Enums'][PublicEnumNameOrOptions]
-    : never;
+    : never

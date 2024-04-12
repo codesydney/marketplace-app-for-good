@@ -1,5 +1,5 @@
-import AuthButton from '../components/AuthButton';
-import Header from '@/components/Header';
+import AuthButton from '../components/AuthButton'
+import Header from '@/components/Header'
 
 export default async function Index() {
   return (
@@ -31,5 +31,5 @@ export default async function Index() {
         </p>
       </footer>
     </div>
-  );
+  )
 }
