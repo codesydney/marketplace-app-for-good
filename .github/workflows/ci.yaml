@@ -3,7 +3,7 @@ name: CI
 on: [push, workflow_dispatch]
 
 jobs:
-  build-and-test:
+  build-test-and-lint:
     runs-on: ubuntu-latest
     environment: main
     steps:
@@ -30,3 +30,6 @@ jobs:
 
       - name: Running Tests
         run: pnpm test
+
+      - name: Linting
+        run: pnpm lint
