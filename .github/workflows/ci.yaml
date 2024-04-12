@@ -1,10 +1,14 @@
 name: CI
 
-on: [push, workflow_dispatch]
+on:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-test-prettier:
     runs-on: ubuntu-latest
+    environment: main
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
