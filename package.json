@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@changesets/cli": "^2.27.1",
+    "@radix-ui/themes": "^3.0.2",
     "@supabase/ssr": "^0.1.0",
     "@supabase/supabase-js": "^2.39.7",
     "geist": "^1.2.2",
@@ -30,7 +31,6 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
-    "@tailwindcss/typography": "^0.5.12",
     "@testing-library/react": "^14.2.1",
     "@types/node": "^20",
     "@types/react": "^18",
