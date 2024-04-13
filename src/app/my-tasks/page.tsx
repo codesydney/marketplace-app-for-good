@@ -2,7 +2,6 @@ import {
   Badge,
   Box,
   Button,
-  Card,
   Container,
   DropdownMenu,
   Flex,
@@ -10,13 +9,9 @@ import {
   Link,
   Table,
   TabNav,
-  Text,
 } from '@radix-ui/themes'
 
-import { tasks } from '../../../data/tasks.json'
 import { formatDate } from '@/utils/utils'
-
-type Task = (typeof tasks)[number]
 
 export default function MyTasksPage() {
   return (
