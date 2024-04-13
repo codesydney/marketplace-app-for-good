@@ -2,7 +2,6 @@ import {
   Badge,
   Box,
   Button,
-  Card,
   Container,
   DropdownMenu,
   Flex,

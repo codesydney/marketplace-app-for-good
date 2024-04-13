@@ -1,8 +1,7 @@
 import { Badge, Box, Button, Card, Flex, Heading, Text } from '@radix-ui/themes'
-import { formatDate, toCurrencyString } from '@/utils/utils'
-
-import { tasks } from '../../../data/tasks.json'
 import Image from 'next/image'
+import { tasks } from '../../../data/tasks.json'
+import { formatDate, toCurrencyString } from '@/utils/utils'
 
 type Task = (typeof tasks)[number]
 
