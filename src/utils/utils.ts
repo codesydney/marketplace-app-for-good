@@ -4,11 +4,11 @@
  */
 export const toCurrencyString = (
   amount: number,
-  locale: Intl.LocalesArgument = "en-AU",
+  locale: Intl.LocalesArgument = 'en-AU',
 ) =>
   amount.toLocaleString(locale, {
-    style: "currency",
-    currency: "AUD",
-  });
+    style: 'currency',
+    currency: 'AUD',
+  })
 
-export const formatDate = (date: string) => new Date(date).toLocaleDateString();
+export const formatDate = (date: string) => new Date(date).toLocaleDateString()

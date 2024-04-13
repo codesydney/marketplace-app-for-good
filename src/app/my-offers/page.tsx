@@ -10,9 +10,9 @@ import {
   Link,
   Table,
   TabNav,
-} from "@radix-ui/themes";
+} from '@radix-ui/themes'
 
-import { formatDate } from "@/utils/utils";
+import { formatDate } from '@/utils/utils'
 
 export default function MyOffersPage() {
   return (
@@ -127,7 +127,7 @@ export default function MyOffersPage() {
         </Table.Root>
       </Flex>
     </Container>
-  );
+  )
 }
 
 function TasksTableDropdown() {
@@ -151,5 +151,5 @@ function TasksTableDropdown() {
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
-  );
+  )
 }

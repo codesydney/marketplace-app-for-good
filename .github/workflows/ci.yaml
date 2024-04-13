@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-test-prettier:
     runs-on: ubuntu-latest
     environment: main
     steps:
@@ -33,3 +33,6 @@ jobs:
 
       - name: Running Tests
         run: pnpm test
+
+      - name: Running Prettier Check
+        run: pnpm prettier:check

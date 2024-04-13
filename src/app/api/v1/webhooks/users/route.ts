@@ -1,40 +1,40 @@
-import { PostgrestError } from "@supabase/supabase-js";
+import { PostgrestError } from '@supabase/supabase-js'
 
-import { logger } from "@/server/lib/logger";
-import { SupabaseInsertWebhookEvent } from "@/server/lib/supabase-utils";
-import { stripe } from "@/server/services/stripe";
-import { supabaseAdminClient } from "@/server/services/supabase";
+import { logger } from '@/server/lib/logger'
+import { SupabaseInsertWebhookEvent } from '@/server/lib/supabase-utils'
+import { stripe } from '@/server/services/stripe'
+import { supabaseAdminClient } from '@/server/services/supabase'
 
-type InsertUsersEvent = SupabaseInsertWebhookEvent<"users">;
+type InsertUsersEvent = SupabaseInsertWebhookEvent<'users'>
 
 /**
  * Handles webhook events when a new user is inserted into the public.users table.
  */
 export async function POST(request: Request) {
   // const body: InsertUsersEvent = ExampleRequestBody;
-  const body: InsertUsersEvent = await request.json();
-  const userId = body.record.id;
+  const body: InsertUsersEvent = await request.json()
+  const userId = body.record.id
 
-  const result = await createStripeCustomerOnNewUser(userId);
-  logger.debug(result, "Create Stripe Customer Result");
+  const result = await createStripeCustomerOnNewUser(userId)
+  logger.debug(result, 'Create Stripe Customer Result')
 
-  return Response.json(null, { status: 200 });
+  return Response.json(null, { status: 200 })
 }
 
 type CreateCustomerResult =
   | {
-      error: null;
+      error: null
       data: {
         customer: {
-          id: string;
-          stripe_customer_id: string;
-        };
-      };
+          id: string
+          stripe_customer_id: string
+        }
+      }
     }
   | {
-      error: Error | PostgrestError;
-      data: null;
-    };
+      error: Error | PostgrestError
+      data: null
+    }
 
 /**
  * Creates a new Stripe Customer for the given user.
@@ -43,31 +43,31 @@ type CreateCustomerResult =
 async function createStripeCustomerOnNewUser(
   userId: string,
 ): Promise<CreateCustomerResult> {
-  const authUserResult = await getAuthUserEmail(userId);
+  const authUserResult = await getAuthUserEmail(userId)
   if (authUserResult.error) {
-    return authUserResult;
+    return authUserResult
   }
 
-  const email = authUserResult.data.email;
+  const email = authUserResult.data.email
 
-  const publicUserResult = await getPublicUser(userId);
+  const publicUserResult = await getPublicUser(userId)
   if (publicUserResult.error) {
-    return publicUserResult;
+    return publicUserResult
   }
   if (publicUserResult.data?.stripe_customer_id) {
-    return { error: null, data: { customer: publicUserResult.data } };
+    return { error: null, data: { customer: publicUserResult.data } }
   }
 
-  const stripeCustomerResult = await createStripeCustomer(email);
+  const stripeCustomerResult = await createStripeCustomer(email)
   if (stripeCustomerResult.error) {
-    return stripeCustomerResult;
+    return stripeCustomerResult
   }
 
-  const customer = stripeCustomerResult.data;
+  const customer = stripeCustomerResult.data
 
-  const updateResult = await updateStripeCustomerId(userId, customer.id);
+  const updateResult = await updateStripeCustomerId(userId, customer.id)
   if (updateResult.error) {
-    return updateResult;
+    return updateResult
   }
 
   return {
@@ -78,38 +78,38 @@ async function createStripeCustomerOnNewUser(
         stripe_customer_id: customer.id,
       },
     },
-  };
+  }
 }
 
 async function getAuthUserEmail(userId: string) {
   const {
     error,
     data: { user },
-  } = await supabaseAdminClient.auth.admin.getUserById(userId);
+  } = await supabaseAdminClient.auth.admin.getUserById(userId)
 
   if (error) {
-    return { error, data: null };
+    return { error, data: null }
   }
 
   if (!user?.email) {
     return {
-      error: new Error("Email missing from auth user"),
+      error: new Error('Email missing from auth user'),
       data: null,
-    };
+    }
   }
 
-  return { error: null, data: { email: user.email } };
+  return { error: null, data: { email: user.email } }
 }
 
 async function getPublicUser(userId: string) {
   return supabaseAdminClient
-    .from("users")
+    .from('users')
     .select(
       `id, 
       stripe_customer_id`,
     )
-    .eq("id", userId)
-    .single();
+    .eq('id', userId)
+    .single()
 }
 
 async function createStripeCustomer(
@@ -120,8 +120,8 @@ async function createStripeCustomer(
 > {
   return stripe.customers
     .create({ email })
-    .then((customer) => ({ error: null, data: customer }))
-    .catch((error) => ({ error, data: null }));
+    .then(customer => ({ error: null, data: customer }))
+    .catch(error => ({ error, data: null }))
 }
 
 async function updateStripeCustomerId(
@@ -129,9 +129,9 @@ async function updateStripeCustomerId(
   stripeCustomerId: string,
 ) {
   return supabaseAdminClient
-    .from("users")
+    .from('users')
     .update({
       stripe_customer_id: stripeCustomerId,
     })
-    .eq("id", userId);
+    .eq('id', userId)
 }

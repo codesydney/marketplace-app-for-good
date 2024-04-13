@@ -1,32 +1,24 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Card,
-  Flex,
-  Heading,
-  Text,
-} from "@radix-ui/themes";
-import { formatDate, toCurrencyString } from "@/utils/utils";
+import { Badge, Box, Button, Card, Flex, Heading, Text } from '@radix-ui/themes'
+import { formatDate, toCurrencyString } from '@/utils/utils'
 
-import { tasks } from "../../../data/tasks.json";
-import Image from "next/image";
+import { tasks } from '../../../data/tasks.json'
+import Image from 'next/image'
 
-type Task = (typeof tasks)[number];
+type Task = (typeof tasks)[number]
 
 export default async function TasksPage() {
-  const activeTask = tasks[0];
+  const activeTask = tasks[0]
 
   return (
     <Flex
-      direction={{ initial: "column", md: "row" }}
+      direction={{ initial: 'column', md: 'row' }}
       gap="6"
-      p={{ initial: "4", md: "8" }}
+      p={{ initial: '4', md: '8' }}
       width="100%"
       className="max-w-6xl"
     >
-      <Flex direction="column" gap="4" width="100%" maxWidth={{ md: "400px" }}>
-        {tasks.map((task) => (
+      <Flex direction="column" gap="4" width="100%" maxWidth={{ md: '400px' }}>
+        {tasks.map(task => (
           <TaskCard key={task.id} task={task} />
         ))}
       </Flex>
@@ -34,7 +26,7 @@ export default async function TasksPage() {
         <TaskInformation task={activeTask} />
       </Flex>
     </Flex>
-  );
+  )
 }
 
 function TaskCard({ task }: { task: Task }) {
@@ -53,7 +45,7 @@ function TaskCard({ task }: { task: Task }) {
         <div></div>
       </div>
     </Card>
-  );
+  )
 }
 
 function TaskInformation({ task }: { task: Task }) {
@@ -100,7 +92,7 @@ function TaskInformation({ task }: { task: Task }) {
         <Offer />
       </Box>
     </Flex>
-  );
+  )
 }
 
 function Offer() {
@@ -133,5 +125,5 @@ function Offer() {
       </Flex>
       <p className="mt-2 text-gray-700">howdily doodily!</p>
     </Flex>
-  );
+  )
 }

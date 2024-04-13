@@ -11,12 +11,12 @@ import {
   Table,
   TabNav,
   Text,
-} from "@radix-ui/themes";
+} from '@radix-ui/themes'
 
-import { tasks } from "../../../data/tasks.json";
-import { formatDate } from "@/utils/utils";
+import { tasks } from '../../../data/tasks.json'
+import { formatDate } from '@/utils/utils'
 
-type Task = (typeof tasks)[number];
+type Task = (typeof tasks)[number]
 
 export default function MyTasksPage() {
   return (
@@ -130,7 +130,7 @@ export default function MyTasksPage() {
         </Table.Root>
       </Flex>
     </Container>
-  );
+  )
 }
 
 function TasksTableDropdown() {
@@ -154,5 +154,5 @@ function TasksTableDropdown() {
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
-  );
+  )
 }
