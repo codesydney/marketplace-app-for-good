@@ -18,9 +18,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground prose max-w-full">
-        <main className="flex min-h-screen flex-col items-center">
-          <Theme>{children}</Theme>
-        </main>
+        <Theme>
+          <main className="flex h-screen min-h-screen flex-col items-center">
+            {children}
+          </main>
+        </Theme>
       </body>
     </html>
   )
