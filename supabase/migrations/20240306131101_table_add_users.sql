@@ -1,6 +1,9 @@
--- PUBLIC USERS table
+-- USERS TABLE
+create type user_role as enum ('Admin', 'Customer', 'ServiceProvider');
+
 create table public.users (
   id                  uuid not null primary key,
+  role                user_role,
   stripe_customer_id  text,
   stripe_account_id   text,
 
