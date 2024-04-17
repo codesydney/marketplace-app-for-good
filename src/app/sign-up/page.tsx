@@ -32,9 +32,7 @@ export default function Login({
       options: {
         emailRedirectTo: `${origin}/auth/callback`,
         data: {
-          roles: {
-            customer: true,
-          },
+          role: 'Customer',
         },
       },
     })
