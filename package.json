@@ -31,7 +31,6 @@
     "stripe": "^14.19.0"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.7",
     "@testing-library/react": "^14.2.1",
     "@types/node": "^20",
     "@types/react": "^18",
