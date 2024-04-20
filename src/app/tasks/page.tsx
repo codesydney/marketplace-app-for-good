@@ -37,7 +37,7 @@ function TaskCard({ task }: { task: Task }) {
         <p className="m-0 text-sm">Created At: {formatDate(task.created_at)}</p>
         <p className="m-0 text-sm">Deadline: {task.semantic_due_date}</p>
         {/* Status */}
-        <p className="text-md m-0 mt-2">{task.state}</p>
+        <p className="text-md m-0 mt-2">Status: {task.state}</p>
       </div>
       <div className="flex flex-col justify-between">
         <p className="m-0 font-extrabold">{toCurrencyString(task.price)}</p>
@@ -50,25 +50,71 @@ function TaskCard({ task }: { task: Task }) {
 function TaskInformation({ task }: { task: Task }) {
   return (
     <Flex gap="8" direction="column" className="w-full bg-white">
-      <Flex gap="4" direction="column">
-        <Box>
-          <Badge color="blue">{task.state}</Badge>
-          <Heading size="7">{task.name}</Heading>
-          <Flex gap="2">
-            <Text>Sydney NSW, Australia</Text>
-            <Text>{formatDate(task.created_at)}</Text>
-          </Flex>
-        </Box>
-        <Box>
-          <Text size="6" weight="bold">
-            {toCurrencyString(task.price)}
-          </Text>
-        </Box>
-        <Box>
-          <Button size="2" variant="solid" color="blue">
-            Make an Offer
-          </Button>
-        </Box>
+      <Flex direction="row" gap="4">
+        <Flex gap="4" direction="column">
+          <Box>
+            <Badge color="blue">{task.state}</Badge>
+            <Heading size="7">{task.name}</Heading>
+            <Flex gap="2">
+              <Text>Sydney NSW, Australia</Text>
+              <Text>{formatDate(task.created_at)}</Text>
+            </Flex>
+          </Box>
+          {/* <Box>
+            <Text size="6" weight="bold">
+              {toCurrencyString(task.price)}
+            </Text>
+          </Box> */}
+          <Box>
+            <Flex gap="4" className="items-center">
+              <Box
+                maxHeight="48px"
+                maxWidth="48px"
+                className="overflow-hidden rounded-full"
+              >
+                <Image
+                  src="https://randomuser.me/api/portraits/men/93.jpg"
+                  alt="Provider"
+                  className="rounded-full"
+                  width={48}
+                  height={48}
+                />
+              </Box>
+              <Box>
+                <Text className="text-lg font-semibold">Davo T.</Text>
+              </Box>
+            </Flex>
+          </Box>
+          {/* <Box>
+            <Button size="2" variant="solid" color="blue">
+              Make an Offer
+            </Button>
+          </Box> */}
+        </Flex>
+        <Flex
+          gap="4"
+          direction="column"
+          className="items-start justify-between rounded-lg bg-slate-200 p-2 shadow-md"
+        >
+          <Box>
+            <Box>
+              <Text size="4" weight="bold">
+                Task Budget
+              </Text>
+            </Box>
+            <Box>
+              <Text size="6" weight="bold">
+                {toCurrencyString(task.price)}
+              </Text>
+            </Box>
+          </Box>
+
+          <Box className=" min-w-[120px]">
+            <Button size="2" variant="solid" color="blue">
+              Make an Offer
+            </Button>
+          </Box>
+        </Flex>
       </Flex>
       <Box>
         <Heading as="h2" size="4" className="mb-2">
