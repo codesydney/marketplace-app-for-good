@@ -15,8 +15,9 @@ export default function ProfilePage() {
   const [userId, setUserId] = useState(null)
 
   useEffect(() => {
+    const supabase = createClient()
+
     const fetchUser = async () => {
-      const supabase = createClient()
       const { data, error } = await supabase.auth.getUser()
 
       if (error) {
@@ -29,8 +30,32 @@ export default function ProfilePage() {
       }
     }
 
+    const fetchServiceProviderData = async () => {
+      if (!userId) return
+
+      const { data, error } = await supabase
+        .from('service_providers')
+        .select('*')
+        .eq('user_id', userId)
+        .single()
+
+      if (error) {
+        console.error('Error fetching service provider data:', error)
+      } else if (data) {
+        setFormData({
+          name: data.name || '',
+          slug: data.slug || '',
+          profileImage: data.profile_image_url || '',
+          coverImage: data.cover_image_url || '',
+          abn: data.abn || '',
+          acn: data.acn || '',
+        })
+      }
+    }
+
     fetchUser()
-  }, [])
+    fetchServiceProviderData()
+  }, [userId])
 
   const handleChange = (event: any) => {
     const { name, value } = event.target
