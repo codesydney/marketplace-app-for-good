@@ -69,7 +69,7 @@ export default function ProfilePage() {
     event.preventDefault()
     const supabase = createClient()
 
-    await supabase.from('service_providers').insert([
+    await supabase.from('service_providers').upsert([
       {
         user_id: userId,
         name: formData.name,
