@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { S3Client } from '@aws-sdk/client-s3'
+import { Upload } from '@aws-sdk/lib-storage'
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION as string,
@@ -10,14 +11,24 @@ const s3Client = new S3Client({
 })
 
 const uploadFileToS3 = async (buffer: Buffer, fileName: string) => {
-  const command = new PutObjectCommand({
+  const uploadParams = {
     Bucket: process.env.AWS_BUCKET_NAME as string,
     Key: `${Date.now()}-${fileName}`,
     Body: buffer,
-  })
+  }
 
-  const response = await s3Client.send(command)
-  return response
+  try {
+    const parallelUpload = new Upload({
+      client: s3Client,
+      params: uploadParams,
+    })
+
+    const uploadResult = await parallelUpload.done()
+    return uploadResult.Location
+  } catch (error) {
+    console.error('Error uploading file to S3:', error)
+    throw new Error('Failed to upload image to S3')
+  }
 }
 
 export const POST = async (req: Request) => {
@@ -33,9 +44,9 @@ export const POST = async (req: Request) => {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer())
-    const fileName = await uploadFileToS3(buffer, file.name)
+    const fileUrl = await uploadFileToS3(buffer, file.name)
 
-    return NextResponse.json({ success: true, fileName }, { status: 200 })
+    return NextResponse.json({ success: true, fileUrl }, { status: 200 })
   } catch (error) {
     console.error(error)
     return NextResponse.json(
