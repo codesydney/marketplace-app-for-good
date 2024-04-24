@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
 import { createClient } from '@/utils/supabase/client'
 
 export default function ProfilePage() {
@@ -16,32 +16,33 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const supabase = createClient()
-
     const fetchUser = async () => {
       const { data, error } = await supabase.auth.getUser()
-
       if (error) {
         console.error('Error fetching user:', error)
         return
       }
-
       if (data.user) {
         setUserId(data.user.id as any)
       }
     }
+    fetchUser()
+  }, [])
 
+  useEffect(() => {
+    if (!userId) return
+    const supabase = createClient()
     const fetchServiceProviderData = async () => {
-      if (!userId) return
-
       const { data, error } = await supabase
         .from('service_providers')
         .select('*')
         .eq('user_id', userId)
         .single()
-
       if (error) {
         console.error('Error fetching service provider data:', error)
-      } else if (data) {
+        return
+      }
+      if (data) {
         setFormData({
           name: data.name || '',
           slug: data.slug || '',
@@ -52,12 +53,10 @@ export default function ProfilePage() {
         })
       }
     }
-
-    fetchUser()
     fetchServiceProviderData()
   }, [userId])
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setFormData(prevState => ({
       ...prevState,
@@ -65,10 +64,42 @@ export default function ProfilePage() {
     }))
   }
 
-  const handleSubmit = async (event: any) => {
+  const handleImageUpload = async (
+    file: File,
+    fieldName: keyof typeof formData,
+  ) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    try {
+      const response = await fetch('/api/v1/image-upload', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await response.json()
+
+      if (data.success) {
+        setFormData(prevState => ({
+          ...prevState,
+          [fieldName]: data.fileUrl,
+        }))
+      } else {
+        console.error('Failed to upload image:', data.message)
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error)
+    }
+  }
+
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      handleImageUpload(file, event.target.name as keyof FormData)
+    }
+  }
+
+  const handleSubmit = async (event: ChangeEvent<HTMLInputElement> | any) => {
     event.preventDefault()
     const supabase = createClient()
-
     await supabase.from('service_providers').upsert([
       {
         user_id: userId,
@@ -107,22 +138,36 @@ export default function ProfilePage() {
           />
         </label>
         <label>
-          Profile Image URL:
+          Profile Image:
           <input
-            type="text"
+            type="file"
             name="profileImage"
-            value={formData.profileImage}
-            onChange={handleChange}
+            onChange={handleImageChange}
+            accept="image/*"
           />
+          {formData.profileImage && (
+            <img
+              src={formData.profileImage}
+              alt="Profile"
+              style={{ width: '100px', height: '100px' }}
+            />
+          )}
         </label>
         <label>
-          Cover Image URL:
+          Cover Image:
           <input
-            type="text"
+            type="file"
             name="coverImage"
-            value={formData.coverImage}
-            onChange={handleChange}
+            onChange={handleImageChange}
+            accept="image/*"
           />
+          {formData.coverImage && (
+            <img
+              src={formData.coverImage}
+              alt="Cover"
+              style={{ width: '100px', height: '100px' }}
+            />
+          )}
         </label>
         <label>
           ABN:
