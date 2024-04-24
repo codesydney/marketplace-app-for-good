@@ -1,7 +1,12 @@
 'use client'
 
 import { useState, useEffect, ChangeEvent } from 'react'
-import { createClient } from '@/utils/supabase/client'
+import {
+  getUser,
+  getServiceProviderData,
+  upsertServiceProviderData,
+  uploadImage,
+} from '@/actions/service-providers'
 
 export default function ProfilePage() {
   const [formData, setFormData] = useState({
@@ -15,33 +20,20 @@ export default function ProfilePage() {
   const [userId, setUserId] = useState(null)
 
   useEffect(() => {
-    const supabase = createClient()
     const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser()
-      if (error) {
-        console.error('Error fetching user:', error)
-        return
-      }
-      if (data.user) {
-        setUserId(data.user.id as any)
+      const user = await getUser()
+
+      if (user) {
+        setUserId(user.id as any)
       }
     }
     fetchUser()
   }, [])
 
   useEffect(() => {
-    if (!userId) return
-    const supabase = createClient()
-    const fetchServiceProviderData = async () => {
-      const { data, error } = await supabase
-        .from('service_providers')
-        .select('*')
-        .eq('user_id', userId)
-        .single()
-      if (error) {
-        console.error('Error fetching service provider data:', error)
-        return
-      }
+    const fetchData = async () => {
+      if (!userId) return
+      const data = await getServiceProviderData(userId as string)
       if (data) {
         setFormData({
           name: data.name || '',
@@ -53,7 +45,9 @@ export default function ProfilePage() {
         })
       }
     }
-    fetchServiceProviderData()
+    if (userId) {
+      fetchData()
+    }
   }, [userId])
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -64,53 +58,30 @@ export default function ProfilePage() {
     }))
   }
 
-  const handleImageUpload = async (
-    file: File,
-    fieldName: keyof typeof formData,
-  ) => {
-    const formData = new FormData()
-    formData.append('file', file)
-    try {
-      const response = await fetch('/api/v1/image-upload', {
-        method: 'POST',
-        body: formData,
-      })
-      const data = await response.json()
+  const handleImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    const fieldName = event.target.name as keyof typeof formData
 
-      if (data.success) {
+    if (file) {
+      const fileUrl = await uploadImage(file)
+      if (fileUrl) {
         setFormData(prevState => ({
           ...prevState,
-          [fieldName]: data.fileUrl,
+          [fieldName]: fileUrl,
         }))
-      } else {
-        console.error('Failed to upload image:', data.message)
       }
-    } catch (error) {
-      console.error('Error uploading image:', error)
-    }
-  }
-
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      handleImageUpload(file, event.target.name as keyof FormData)
     }
   }
 
   const handleSubmit = async (event: ChangeEvent<HTMLInputElement> | any) => {
     event.preventDefault()
-    const supabase = createClient()
-    await supabase.from('service_providers').upsert([
-      {
-        user_id: userId,
-        name: formData.name,
-        slug: formData.slug,
-        profile_image_url: formData.profileImage,
-        cover_image_url: formData.coverImage,
-        abn: formData.abn,
-        acn: formData.acn,
-      },
-    ])
+    const success = await upsertServiceProviderData({ ...formData, userId })
+
+    if (success) {
+      console.info('Profile updated successfully')
+    } else {
+      console.error('Failed to update profile')
+    }
   }
 
   if (!userId) return <div>Loading...</div>
