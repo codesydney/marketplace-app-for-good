@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, ChangeEvent } from 'react'
+import { toast } from 'sonner'
 import {
   getUser,
   getServiceProviderData,
@@ -78,7 +79,7 @@ export default function ProfilePage() {
     const success = await upsertServiceProviderData({ ...formData, userId })
 
     if (success) {
-      console.info('Profile updated successfully')
+      toast.success('Profile updated successfully')
     } else {
       console.error('Failed to update profile')
     }
