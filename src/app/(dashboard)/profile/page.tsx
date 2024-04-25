@@ -81,7 +81,7 @@ export default function ProfilePage() {
     if (success) {
       toast.success('Profile updated successfully')
     } else {
-      console.error('Failed to update profile')
+      toast.error('Failed to update profile')
     }
   }
 
