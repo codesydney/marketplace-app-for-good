@@ -12,7 +12,6 @@ import {
 export default function ProfilePage() {
   const [formData, setFormData] = useState({
     name: '',
-    slug: '',
     profileImage: '',
     coverImage: '',
     abn: '',
@@ -38,7 +37,6 @@ export default function ProfilePage() {
       if (data) {
         setFormData({
           name: data.name || '',
-          slug: data.slug || '',
           profileImage: data.profile_image_url || '',
           coverImage: data.cover_image_url || '',
           abn: data.abn || '',
@@ -97,15 +95,6 @@ export default function ProfilePage() {
             type="text"
             name="name"
             value={formData.name}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Slug:
-          <input
-            type="text"
-            name="slug"
-            value={formData.slug}
             onChange={handleChange}
           />
         </label>
