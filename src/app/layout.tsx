@@ -3,6 +3,7 @@ import { GeistSans } from 'geist/font/sans'
 import '@radix-ui/themes/styles.css'
 import './globals.css'
 import { Theme } from '@radix-ui/themes'
+import ToasterProvider from '@/providers/ToasterProvider'
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             {children}
           </main>
         </Theme>
+        <ToasterProvider />
       </body>
     </html>
   )

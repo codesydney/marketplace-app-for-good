@@ -2,7 +2,7 @@
 create table public.service_providers (
   user_id           uuid references users not null primary key,
   name              text not null,
-  slug              text not null,
+  slug              text,
   profile_image_url text,
   cover_image_url   text,
   abn               text not null,

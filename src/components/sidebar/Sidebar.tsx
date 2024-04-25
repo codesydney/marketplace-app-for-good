@@ -6,6 +6,7 @@ import {
   BellIcon,
   DashboardIcon,
   ExitIcon,
+  PersonIcon,
 } from '@radix-ui/react-icons'
 import { Box, IconProps, Text } from '@radix-ui/themes'
 import { createClient } from '@/utils/supabase/server'
@@ -34,6 +35,11 @@ const navMenu: NavMenu[] = [
     label: 'offer',
     link: '/offer',
     icon: BellIcon,
+  },
+  {
+    label: 'profile',
+    link: '/profile',
+    icon: PersonIcon,
   },
 ]
 
