@@ -30,6 +30,7 @@ const getServiceProviderData = async (userId: string) => {
 
 const upsertServiceProviderData = async (formData: any): Promise<Boolean> => {
   const { userId, name, profileImage, coverImage, abn, acn } = formData
+
   const { error } = await supabase.from('service_providers').upsert({
     user_id: userId,
     name,

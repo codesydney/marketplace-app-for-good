@@ -2,6 +2,7 @@
 
 import { useState, useEffect, ChangeEvent } from 'react'
 import { toast } from 'sonner'
+import Image from 'next/image'
 import {
   getUser,
   getServiceProviderData,
@@ -63,6 +64,7 @@ export default function ProfilePage() {
 
     if (file) {
       const fileUrl = await uploadImage(file)
+
       if (fileUrl) {
         setFormData(prevState => ({
           ...prevState,
@@ -107,10 +109,11 @@ export default function ProfilePage() {
             accept="image/*"
           />
           {formData.profileImage && (
-            <img
+            <Image
               src={formData.profileImage}
               alt="Profile"
-              style={{ width: '100px', height: '100px' }}
+              width={100}
+              height={100}
             />
           )}
         </label>
@@ -123,10 +126,11 @@ export default function ProfilePage() {
             accept="image/*"
           />
           {formData.coverImage && (
-            <img
+            <Image
               src={formData.coverImage}
               alt="Cover"
-              style={{ width: '100px', height: '100px' }}
+              width={100}
+              height={100}
             />
           )}
         </label>
