@@ -23,7 +23,7 @@ export default async function DashboardLayout({
     <section className="w-full">
       <Flex>
         <Sidebar />
-        <Box className="flex w-full flex-col gap-2">
+        <Box className="flex w-full flex-col">
           <Header />
           <main>{children}</main>
         </Box>

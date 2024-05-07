@@ -9,6 +9,16 @@ body {
   margin: 0;
 }
 
+/* Overiting global settings to make the mapboxgl-map fit in the screen */
+.mapboxgl-map {
+  height: 90vh;
+}
+
+.mapboxgl-canvas {
+  position: relative !important;
+  height: 90vh;
+}
+
 @keyframes animateIn {
   from {
     opacity: 0;
