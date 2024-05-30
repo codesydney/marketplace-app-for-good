@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground prose max-w-full">
         <Theme>
-          <main className="flex h-screen min-h-screen flex-col items-center">
+          <main className="flex h-full min-h-screen flex-col items-center">
             {children}
           </main>
         </Theme>
