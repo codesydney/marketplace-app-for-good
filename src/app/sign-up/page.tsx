@@ -21,69 +21,65 @@ export default function SignUpForm() {
   )
 
   return (
-    <Flex
-      direction="column"
-      justify="center"
-      align="center"
-      width="100%"
-      height="100%"
-    >
-      <Box
-        width={{
-          initial: '100%',
-          md: '600px',
-        }}
+    <Box p={{ initial: '4', md: '8' }}>
+      <Flex
+        direction="column"
+        justify="center"
+        align="center"
+        width="100%"
+        height="100%"
       >
-        <Card size="4">
-          <Flex direction="column" justify="center" align="center" gap="4">
-            <Box width="100%">
-              <Heading as="h1">Create an Account</Heading>
-            </Box>
-            <Box width="100%">
-              <Flex
-                direction={{ initial: 'column', md: 'row' }}
-                justify="between"
-              >
-                <RadioCards.Root
-                  defaultValue="customers"
-                  columns="2"
-                  className="w-full"
-                  onValueChange={value =>
-                    setUserType(value as 'customers' | 'service-providers')
-                  }
+        <Box
+          width={{
+            initial: '100%',
+            md: '600px',
+          }}
+        >
+          <Card size="4">
+            <Flex direction="column" justify="center" align="center" gap="4">
+              <Box width="100%">
+                <Heading as="h1">Create an Account</Heading>
+              </Box>
+              <Box width="100%">
+                <Flex
+                  direction={{ initial: 'column', md: 'row' }}
+                  justify="between"
                 >
-                  <RadioCards.Item value="customers">
-                    <Flex direction="column" width="100%">
-                      <Text weight="bold">Customer</Text>
-                      <Text>Need help with a task?</Text>
-                    </Flex>
-                  </RadioCards.Item>
-                  <RadioCards.Item value="service-providers">
-                    <Flex direction="column" width="100%">
-                      <Text weight="bold">Service Provider</Text>
-                      <Text>Earn money as a provider.</Text>
-                    </Flex>
-                  </RadioCards.Item>
-                </RadioCards.Root>
-              </Flex>
-            </Box>
+                  <RadioCards.Root
+                    defaultValue="customers"
+                    columns="2"
+                    className="w-full"
+                    onValueChange={value =>
+                      setUserType(value as 'customers' | 'service-providers')
+                    }
+                  >
+                    <RadioCards.Item value="customers">
+                      <Flex direction="column" width="100%">
+                        <Text weight="bold">Customer</Text>
+                        <Text>Need help with a task?</Text>
+                      </Flex>
+                    </RadioCards.Item>
+                    <RadioCards.Item value="service-providers">
+                      <Flex direction="column" width="100%">
+                        <Text weight="bold">Service Provider</Text>
+                        <Text>Earn money as a provider.</Text>
+                      </Flex>
+                    </RadioCards.Item>
+                  </RadioCards.Root>
+                </Flex>
+              </Box>
 
-            <Box width="100%">
-              {userType === 'customers' && <CustomerSignupForm />}
-              {userType === 'service-providers' && (
-                <ServiceProviderSignupForm />
-              )}
-            </Box>
-
-            {/* {searchParams?.message && (
-              <p className="bg-foreground/10 text-foreground m-0 text-center">
-                {searchParams.message}
-              </p>
-            )} */}
-          </Flex>
-        </Card>
-      </Box>
-    </Flex>
+              <Box width="100%">
+                {userType === 'customers' && <CustomerSignupForm />}
+                {userType === 'service-providers' && (
+                  <ServiceProviderSignupForm />
+                )}
+              </Box>
+            </Flex>
+          </Card>
+        </Box>
+      </Flex>
+    </Box>
   )
 }
 
