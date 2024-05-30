@@ -7,22 +7,24 @@ import { createClient } from '@/utils/supabase/server'
 import { customerSignupFormSchema } from '@/types/forms'
 import { stripe } from '@/server/services/stripe'
 
-type Response =
+type SignupResponse =
   | {
-      success: boolean
+      success: true
       message?: string
     }
   | {
       success: false
       message: string
-      error: Error
+      error: Error | PostgrestError
     }
 
 /**
  * This function handles error and success responses for the customer sign-up route.
  * See the handleCustomerSignup function for the main logic.
  */
-export const POST = async (req: Request): Promise<NextResponse<Response>> => {
+export const POST = async (
+  req: Request,
+): Promise<NextResponse<SignupResponse>> => {
   const { error } = await handleCustomerSignup(req)
 
   if (error instanceof ZodError) {
