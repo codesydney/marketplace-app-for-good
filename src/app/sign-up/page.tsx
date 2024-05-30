@@ -37,7 +37,7 @@ export default function SignUpForm() {
         <Card size="4">
           <Flex direction="column" justify="center" align="center" gap="4">
             <Box width="100%">
-              <Heading as="h3">Create an Account</Heading>
+              <Heading as="h1">Create an Account</Heading>
             </Box>
             <Box width="100%">
               <Flex
@@ -71,8 +71,7 @@ export default function SignUpForm() {
             <Box width="100%">
               {userType === 'customers' && <CustomerSignupForm />}
               {userType === 'service-providers' && (
-                // eslint-disable-next-line react/jsx-no-comment-textnodes
-                <Text>//TODO: to be implemented</Text>
+                <ServiceProviderSignupForm />
               )}
             </Box>
 
@@ -125,6 +124,7 @@ function CustomerSignupForm() {
             Preferred Name
           </Text>
           <TextField.Root
+            required
             type="text"
             name="preferred-name"
             placeholder="John"
@@ -137,6 +137,7 @@ function CustomerSignupForm() {
             Full Name
           </Text>
           <TextField.Root
+            required
             type="text"
             name="fullname"
             placeholder="John Smith"
@@ -149,6 +150,7 @@ function CustomerSignupForm() {
             Email
           </Text>
           <TextField.Root
+            required
             type="email"
             name="email"
             placeholder="john.smith@email.com"
@@ -161,6 +163,178 @@ function CustomerSignupForm() {
             Password
           </Text>
           <TextField.Root
+            required
+            type="password"
+            name="password"
+            placeholder="********"
+            mt="2"
+          />
+        </Box>
+
+        <Flex direction="row" width="100%" justify="end" gap="4">
+          <Link href="sign-in">
+            <Button type="button" color="indigo" variant="soft">
+              Already have an account?
+            </Button>
+          </Link>
+          <Button color="indigo" variant="solid">
+            Sign Up
+          </Button>
+        </Flex>
+      </Flex>
+    </form>
+  )
+}
+
+function ServiceProviderSignupForm() {
+  const signUp = async (formData: FormData) => {
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+    const preferredName = formData.get('preferred-name') as string
+    const fullname = formData.get('fullname') as string
+    const companyName = formData.get('company-name') as string
+    const abn = formData.get('abn') as string
+    const acn = formData.get('acn') as string
+    const industry = formData.get('industry') as string
+
+    const supabase = createClient()
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          role: 'service-provider',
+          onboarded: false,
+          // TODO migrate this to the backend since we don't this to be set on the frontend
+          preferredName,
+          fullname,
+          companyDetails: {
+            companyName,
+            abn,
+            acn,
+            industry,
+          },
+        },
+      },
+    })
+
+    if (error) {
+      return redirect('/sign-up?message=Could not authenticate user')
+    }
+
+    return redirect('/sign-up?message=Check email to continue sign in process')
+  }
+
+  return (
+    <form method="post" action={signUp}>
+      <Flex direction="column" justify="center" align="center" gap="5">
+        <Box width="100%">
+          <Heading as="h2" size="5">
+            Company Details
+          </Heading>
+        </Box>
+        <Box width="100%">
+          <Text as="label" align="left">
+            Company Name
+          </Text>
+          <TextField.Root
+            required
+            type="text"
+            name="company-name"
+            placeholder="Jim's Mowing"
+            mt="2"
+          />
+        </Box>
+
+        <Box width="100%">
+          <Text as="label" align="left">
+            ABN
+          </Text>
+          <TextField.Root
+            required
+            type="text"
+            name="abn"
+            placeholder="12 345 678 901"
+            mt="2"
+          />
+        </Box>
+
+        <Box width="100%">
+          <Text as="label" align="left">
+            ACN (Optional)
+          </Text>
+          <TextField.Root
+            type="text"
+            name="acn"
+            placeholder="123 456 789"
+            mt="2"
+          />
+        </Box>
+
+        <Box width="100%">
+          <Text as="label" align="left">
+            Industry
+          </Text>
+          <TextField.Root
+            required
+            type="text"
+            name="acn"
+            placeholder="Lawnmowing"
+            mt="2"
+          />
+        </Box>
+
+        <Box width="100%">
+          <Heading as="h2" size="5">
+            Contact Information
+          </Heading>
+        </Box>
+        <Box width="100%">
+          <Text as="label" align="left">
+            Preferred Name
+          </Text>
+          <TextField.Root
+            required
+            type="text"
+            name="preferred-name"
+            placeholder="John"
+            mt="2"
+          />
+        </Box>
+
+        <Box width="100%">
+          <Text as="label" align="left">
+            Full Name
+          </Text>
+          <TextField.Root
+            required
+            type="text"
+            name="fullname"
+            placeholder="Jim Smith"
+            mt="2"
+          />
+        </Box>
+
+        <Box width="100%">
+          <Text as="label" align="left">
+            Email
+          </Text>
+          <TextField.Root
+            required
+            type="email"
+            name="email"
+            placeholder="jim.smith@email.com"
+            mt="2"
+          />
+        </Box>
+
+        <Box width="100%">
+          <Text as="label" align="left">
+            Password
+          </Text>
+          <TextField.Root
+            required
             type="password"
             name="password"
             placeholder="********"
