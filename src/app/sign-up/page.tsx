@@ -7,13 +7,14 @@ import {
   Card,
   Flex,
   Heading,
+  RadioCards,
   Text,
   TextField,
 } from '@radix-ui/themes'
 
 import { createClient } from '@/utils/supabase/server'
 
-export default function Login({
+export default function SignUp({
   searchParams,
 }: {
   searchParams: { message: string }
@@ -55,14 +56,39 @@ export default function Login({
       <Box
         width={{
           initial: '100%',
-          md: '400px',
+          md: '600px',
         }}
       >
         <Card size="4">
           <form method="post">
             <Flex direction="column" justify="center" align="center" gap="5">
               <Box width="100%">
-                <Heading as="h3">Sign Up</Heading>
+                <Heading as="h3">Create an Account</Heading>
+              </Box>
+              <Box width="100%">
+                <Flex
+                  direction={{ initial: 'column', md: 'row' }}
+                  justify="between"
+                >
+                  <RadioCards.Root
+                    defaultValue="1"
+                    columns="2"
+                    className="w-full"
+                  >
+                    <RadioCards.Item value="customers">
+                      <Flex direction="column" width="100%">
+                        <Text weight="bold">Customer</Text>
+                        <Text>Need help with a task?</Text>
+                      </Flex>
+                    </RadioCards.Item>
+                    <RadioCards.Item value="service-providers">
+                      <Flex direction="column" width="100%">
+                        <Text weight="bold">Service Provider</Text>
+                        <Text>Earn money as a provider.</Text>
+                      </Flex>
+                    </RadioCards.Item>
+                  </RadioCards.Root>
+                </Flex>
               </Box>
               <Box width="100%">
                 <Text as="label" align="left">
