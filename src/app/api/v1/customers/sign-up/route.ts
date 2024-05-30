@@ -18,6 +18,10 @@ type Response =
       error: Error
     }
 
+/**
+ * This function handles error and success responses for the customer sign-up route.
+ * See the handleCustomerSignup function for the main logic.
+ */
 export const POST = async (req: Request): Promise<NextResponse<Response>> => {
   const { error } = await handleCustomerSignup(req)
 
@@ -49,6 +53,11 @@ export const POST = async (req: Request): Promise<NextResponse<Response>> => {
   return NextResponse.json({ success: true })
 }
 
+/**
+ * Handles the signup form for our customer users.
+ * @param req
+ * @remarks creates a stripe user before creating an auth.user record and customer record in Supabase
+ */
 async function handleCustomerSignup(
   req: Request,
 ): Promise<
