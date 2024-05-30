@@ -6,6 +6,7 @@ import { ZodError } from 'zod'
 import { createClient } from '@/utils/supabase/server'
 import { customerSignupFormSchema } from '@/types/forms'
 import { stripe } from '@/server/services/stripe'
+import { logger } from '@/server/lib/logger'
 
 type SignupResponse =
   | {
@@ -28,6 +29,7 @@ export const POST = async (
   const { error } = await handleCustomerSignup(req)
 
   if (error instanceof ZodError) {
+    logger.error({ error }, 'Customers Signup: Input Validation Error')
     return NextResponse.json(
       { success: false, message: error.message, error },
       { status: 400 },
@@ -35,6 +37,7 @@ export const POST = async (
   }
 
   if (error instanceof AuthError) {
+    logger.error({ error }, 'Customers Signup: Supabase Auth Error')
     return NextResponse.json(
       {
         success: false,
@@ -46,6 +49,7 @@ export const POST = async (
   }
 
   if (error) {
+    logger.error({ error }, 'Customers Signup: Error')
     return NextResponse.json(
       { success: false, message: error.message, error },
       { status: 500 },
