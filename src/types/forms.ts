@@ -8,6 +8,8 @@ export const customerSignupFormSchema = zfd.formData({
   fullname: zfd.text(z.string()),
 })
 
+export type CustomerSignupFormSchema = z.infer<typeof customerSignupFormSchema>
+
 export const serviceProviderSignupFormSchema = zfd.formData({
   email: zfd.text(z.string().email()),
   password: zfd.text(z.string().min(8)),
@@ -18,3 +20,7 @@ export const serviceProviderSignupFormSchema = zfd.formData({
   acn: zfd.text(z.string().length(9).optional()),
   industry: zfd.text(z.string()),
 })
+
+export type ServiceProviderSignupFormSchema = z.infer<
+  typeof serviceProviderSignupFormSchema
+>

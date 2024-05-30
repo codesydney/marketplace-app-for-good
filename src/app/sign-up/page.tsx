@@ -14,7 +14,13 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { Form, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { createClient } from '../../utils/supabase/client'
+import {
+  CustomerSignupFormSchema,
+  customerSignupFormSchema,
+} from '@/types/forms'
 
 export default function SignUpForm() {
   const [userType, setUserType] = useState<'customers' | 'service-providers'>(
@@ -85,36 +91,57 @@ export default function SignUpForm() {
 }
 
 function CustomerSignupForm() {
-  const signUp = async (formData: FormData) => {
-    const response = await fetch('/api/v1/customers/sign-up', {
-      method: 'POST',
-      body: formData,
-    })
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useForm<CustomerSignupFormSchema>({
+    resolver: zodResolver(customerSignupFormSchema),
+  })
 
-    const responseBody = await response.json()
+  const onSuccess = async () => {
+    toast.success(
+      'Successfully created new customer account. Redirecting to sign in...',
+    )
 
-    if (responseBody.success === false) {
-      toast.error(responseBody.message)
-      return
-    }
+    setTimeout(() => {
+      redirect('/sign-in')
+    }, 5000)
+  }
 
-    toast.success('Successfully created new customer account.')
+  const onError = async ({
+    response,
+  }: {
+    response?: Response
+    error?: unknown
+  }) => {
+    const responseBody = await response?.json()
+    toast.error(responseBody.message)
   }
 
   return (
-    <form method="post" action={signUp}>
-      <Flex direction="column" justify="center" align="center" gap="5">
+    <Form
+      action="/api/v1/customers/sign-up"
+      method="post"
+      control={control}
+      onSuccess={onSuccess}
+      onError={onError}
+    >
+      <Flex direction="column" justify="center" align="center" gap="4">
         <Box width="100%">
           <Text as="label" align="left">
             Preferred Name
           </Text>
           <TextField.Root
             required
-            type="text"
-            name="preferred_name"
             placeholder="John"
             mt="2"
+            mb="1"
+            {...register('preferred_name')}
           />
+          <Text as="label" color="red" align="left">
+            {errors.preferred_name?.message ?? ''}
+          </Text>
         </Box>
 
         <Box width="100%">
@@ -124,10 +151,14 @@ function CustomerSignupForm() {
           <TextField.Root
             required
             type="text"
-            name="fullname"
             placeholder="John Smith"
             mt="2"
+            mb="1"
+            {...register('fullname')}
           />
+          <Text as="label" color="red" align="left">
+            {errors.fullname?.message ?? ''}
+          </Text>
         </Box>
 
         <Box width="100%">
@@ -137,10 +168,14 @@ function CustomerSignupForm() {
           <TextField.Root
             required
             type="email"
-            name="email"
             placeholder="john.smith@email.com"
             mt="2"
+            mb="1"
+            {...register('email')}
           />
+          <Text as="label" color="red" align="left">
+            {errors.email?.message ?? ''}
+          </Text>
         </Box>
 
         <Box width="100%">
@@ -150,10 +185,14 @@ function CustomerSignupForm() {
           <TextField.Root
             required
             type="password"
-            name="password"
             placeholder="********"
             mt="2"
+            mb="1"
+            {...register('password')}
           />
+          <Text as="label" color="red" align="left">
+            {errors.password?.message ?? ''}
+          </Text>
         </Box>
 
         <Flex direction="row" width="100%" justify="end" gap="4">
@@ -167,7 +206,7 @@ function CustomerSignupForm() {
           </Button>
         </Flex>
       </Flex>
-    </form>
+    </Form>
   )
 }
 
