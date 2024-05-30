@@ -92,15 +92,20 @@ function CustomerSignupForm() {
   const signUp = async (formData: FormData) => {
     const email = formData.get('email') as string
     const password = formData.get('password') as string
+    const preferredName = formData.get('preferred-name') as string
+    const fullname = formData.get('fullname') as string
     const supabase = createClient()
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${origin}/auth/callback`,
         data: {
-          role: 'Customer',
+          role: 'customer',
+          onboarded: false,
+          // TODO see if we can add this somewhere else like another table
+          preferredName,
+          fullname,
         },
       },
     })
@@ -113,7 +118,7 @@ function CustomerSignupForm() {
   }
 
   return (
-    <form method="post">
+    <form method="post" action={signUp}>
       <Flex direction="column" justify="center" align="center" gap="5">
         <Box width="100%">
           <Text as="label" align="left">
@@ -133,7 +138,7 @@ function CustomerSignupForm() {
           </Text>
           <TextField.Root
             type="text"
-            name="full-name"
+            name="fullname"
             placeholder="John Smith"
             mt="2"
           />
@@ -169,7 +174,7 @@ function CustomerSignupForm() {
               Already have an account?
             </Button>
           </Link>
-          <Button color="indigo" variant="solid" formAction={signUp}>
+          <Button color="indigo" variant="solid">
             Sign Up
           </Button>
         </Flex>
