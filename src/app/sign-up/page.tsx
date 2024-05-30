@@ -13,6 +13,7 @@ import {
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { createClient } from '../../utils/supabase/client'
 
 export default function SignUpForm() {
@@ -93,8 +94,11 @@ function CustomerSignupForm() {
     const responseBody = await response.json()
 
     if (responseBody.success === false) {
-      // console.log({ responseBody })
+      toast.error(responseBody.message)
+      return
     }
+
+    toast.success('Successfully created new customer account.')
   }
 
   return (
