@@ -85,31 +85,16 @@ export default function SignUpForm() {
 
 function CustomerSignupForm() {
   const signUp = async (formData: FormData) => {
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-    const preferredName = formData.get('preferred-name') as string
-    const fullname = formData.get('fullname') as string
-    const supabase = createClient()
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          role: 'customer',
-          onboarded: false,
-          // TODO see if we can add this somewhere else like another table
-          preferredName,
-          fullname,
-        },
-      },
+    const response = await fetch('/api/v1/customers/sign-up', {
+      method: 'POST',
+      body: formData,
     })
 
-    if (error) {
-      return redirect('/sign-up?message=Could not authenticate user')
-    }
+    const responseBody = await response.json()
 
-    return redirect('/sign-up?message=Check email to continue sign in process')
+    if (responseBody.success === false) {
+      // console.log({ responseBody })
+    }
   }
 
   return (
@@ -122,7 +107,7 @@ function CustomerSignupForm() {
           <TextField.Root
             required
             type="text"
-            name="preferred-name"
+            name="preferred_name"
             placeholder="John"
             mt="2"
           />
