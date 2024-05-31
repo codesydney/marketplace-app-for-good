@@ -37,69 +37,71 @@ export default function Login({
   }
 
   return (
-    <Flex
-      direction="column"
-      justify="center"
-      align="center"
-      width="100%"
-      height="100%"
-    >
-      <Box
-        width={{
-          initial: '100%',
-          md: '400px',
-        }}
+    <Box p={{ initial: '4', md: '8' }} height="100vh">
+      <Flex
+        direction="column"
+        justify="center"
+        align="center"
+        width="100%"
+        height="100%"
       >
-        <Card size="4">
-          <form method="post">
-            <Flex direction="column" justify="center" align="center" gap="5">
-              <Box width="100%">
-                <Heading as="h3">Sign In</Heading>
-              </Box>
-              <Box width="100%">
-                <Text as="label" align="left">
-                  Email
-                </Text>
-                <TextField.Root
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  mt="2"
-                />
-              </Box>
+        <Box
+          width={{
+            initial: '100%',
+            md: '400px',
+          }}
+        >
+          <Card size="4">
+            <form method="post">
+              <Flex direction="column" justify="center" align="center" gap="5">
+                <Box width="100%">
+                  <Heading as="h3">Sign In</Heading>
+                </Box>
+                <Box width="100%">
+                  <Text as="label" align="left">
+                    Email
+                  </Text>
+                  <TextField.Root
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    mt="2"
+                  />
+                </Box>
 
-              <Box width="100%">
-                <Text as="label" align="left">
-                  Password
-                </Text>
-                <TextField.Root
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  mt="2"
-                />
-              </Box>
+                <Box width="100%">
+                  <Text as="label" align="left">
+                    Password
+                  </Text>
+                  <TextField.Root
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    mt="2"
+                  />
+                </Box>
 
-              <Flex direction="row" width="100%" justify="end" gap="4">
-                <Link href="/service-providers/sign-up">
-                  <Button type="button" color="indigo" variant="soft">
-                    Create an account
+                <Flex direction="row" width="100%" justify="end" gap="4">
+                  <Link href="/service-providers/sign-up">
+                    <Button type="button" color="indigo" variant="soft">
+                      Create an account
+                    </Button>
+                  </Link>
+                  <Button color="indigo" variant="solid" formAction={signIn}>
+                    Sign In
                   </Button>
-                </Link>
-                <Button color="indigo" variant="solid" formAction={signIn}>
-                  Sign In
-                </Button>
-              </Flex>
+                </Flex>
 
-              {searchParams?.message && (
-                <p className="bg-foreground/10 text-foreground m-0 text-center">
-                  {searchParams.message}
-                </p>
-              )}
-            </Flex>
-          </form>
-        </Card>
-      </Box>
-    </Flex>
+                {searchParams?.message && (
+                  <p className="bg-foreground/10 text-foreground m-0 text-center">
+                    {searchParams.message}
+                  </p>
+                )}
+              </Flex>
+            </form>
+          </Card>
+        </Box>
+      </Flex>
+    </Box>
   )
 }
