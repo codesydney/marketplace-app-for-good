@@ -1,6 +1,6 @@
 -- SERVICE PROVIDERS
 create table public.service_providers (
-  user_id           uuid references users not null primary key,
+  user_id           uuid not null primary key,
   company_name      text not null,
   abn               text not null,
   acn               text,

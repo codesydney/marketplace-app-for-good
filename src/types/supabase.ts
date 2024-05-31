@@ -83,13 +83,6 @@ export type Database = {
             referencedRelation: 'users'
             referencedColumns: ['id']
           },
-          {
-            foreignKeyName: 'service_providers_user_id_fkey1'
-            columns: ['user_id']
-            isOneToOne: true
-            referencedRelation: 'users'
-            referencedColumns: ['id']
-          },
         ]
       }
       users: {
