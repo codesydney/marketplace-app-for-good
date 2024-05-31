@@ -106,10 +106,8 @@ async function handleCustomerSignup(
     options: {
       data: {
         role: 'customer',
-        customer_id: stripeCustomer.id,
         onboarded: true,
         preferred_name: preferredName,
-        fullname,
       },
     },
   })
@@ -129,6 +127,19 @@ async function handleCustomerSignup(
       success: false,
       error: customerInsertResult.error,
     }
+  }
+
+  const insertOnboardingStatusResult = await supabase
+    .from('stripe_users')
+    .insert({
+      id: stripeCustomer.id,
+      user_id: userId,
+      type: 'CUSTOMER',
+      onboarded: true,
+    })
+
+  if (insertOnboardingStatusResult.error) {
+    return { success: false, error: insertOnboardingStatusResult.error }
   }
 
   return { success: true, error: null }

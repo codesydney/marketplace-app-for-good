@@ -85,6 +85,44 @@ export type Database = {
           },
         ]
       }
+      stripe_users: {
+        Row: {
+          account_url: string | null
+          created_at: string | null
+          id: string
+          onboarded: boolean
+          type: Database['public']['Enums']['user_type_enum']
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          account_url?: string | null
+          created_at?: string | null
+          id: string
+          onboarded?: boolean
+          type: Database['public']['Enums']['user_type_enum']
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          account_url?: string | null
+          created_at?: string | null
+          id?: string
+          onboarded?: boolean
+          type?: Database['public']['Enums']['user_type_enum']
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'stripe_users_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -93,7 +131,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_type_enum: 'SERVICE_PROVIDER' | 'CUSTOMER'
     }
     CompositeTypes: {
       [_ in never]: never
