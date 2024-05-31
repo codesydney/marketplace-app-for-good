@@ -15,6 +15,7 @@
     "supabase:start": "npx supabase start",
     "supabase:stop": "npx supabase stop",
     "supabase:db-push": "npx supabase db push",
+    "supabase:migrations-add": "npx supabase migration new",
     "supabase:generate-types": "npx supabase gen types typescript --project-id $PROJECT_REF --schema public > src/types/supabase.ts",
     "supabase:reset": "npx supabase db reset --local",
     "supabase:reset:debug": "npx supabase db reset --local --debug",
