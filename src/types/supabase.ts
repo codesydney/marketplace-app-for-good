@@ -85,35 +85,6 @@ export type Database = {
           },
         ]
       }
-      users: {
-        Row: {
-          id: string
-          role: Database['public']['Enums']['user_role'] | null
-          stripe_account_id: string | null
-          stripe_customer_id: string | null
-        }
-        Insert: {
-          id: string
-          role?: Database['public']['Enums']['user_role'] | null
-          stripe_account_id?: string | null
-          stripe_customer_id?: string | null
-        }
-        Update: {
-          id?: string
-          role?: Database['public']['Enums']['user_role'] | null
-          stripe_account_id?: string | null
-          stripe_customer_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'users_id_fkey'
-            columns: ['id']
-            isOneToOne: true
-            referencedRelation: 'users'
-            referencedColumns: ['id']
-          },
-        ]
-      }
     }
     Views: {
       [_ in never]: never
@@ -122,7 +93,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      user_role: 'Admin' | 'Customer' | 'ServiceProvider'
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
