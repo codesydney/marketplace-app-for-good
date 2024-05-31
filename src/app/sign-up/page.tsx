@@ -11,7 +11,7 @@ import {
   Button,
 } from '@radix-ui/themes'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Form, useForm } from 'react-hook-form'
@@ -97,6 +97,7 @@ export default function SignUpForm() {
 }
 
 function CustomerSignupForm() {
+  const router = useRouter()
   const {
     register,
     control,
@@ -111,18 +112,21 @@ function CustomerSignupForm() {
     )
 
     setTimeout(() => {
-      redirect('/sign-in')
+      router.push('/sign-in')
     }, 5000)
   }
 
   const onError = async ({
     response,
+    error,
   }: {
     response?: Response
     error?: unknown
   }) => {
     const responseBody = await response?.json()
-    toast.error(responseBody.message)
+
+    if (responseBody) toast.error(responseBody.message)
+    if (error) toast.error(error.toString())
   }
 
   return (
@@ -217,6 +221,7 @@ function CustomerSignupForm() {
 }
 
 function ServiceProviderSignupForm() {
+  const router = useRouter()
   const {
     register,
     control,
@@ -231,18 +236,21 @@ function ServiceProviderSignupForm() {
     )
 
     setTimeout(() => {
-      redirect('/sign-in')
+      router.push('/sign-in')
     }, 5000)
   }
 
   const onError = async ({
     response,
+    error,
   }: {
     response?: Response
     error?: unknown
   }) => {
     const responseBody = await response?.json()
-    toast.error(responseBody.message)
+
+    if (responseBody) toast.error(responseBody.message)
+    if (error) toast.error(error.toString())
   }
 
   return (
@@ -331,7 +339,7 @@ function ServiceProviderSignupForm() {
           </Text>
           <TextField.Root
             required
-            placeholder="John"
+            placeholder="Jim"
             mt="2"
             mb="1"
             {...register('preferred_name')}
@@ -348,7 +356,7 @@ function ServiceProviderSignupForm() {
           <TextField.Root
             required
             type="text"
-            placeholder="John Smith"
+            placeholder="Jim Smith"
             mt="2"
             mb="1"
             {...register('fullname')}
@@ -365,7 +373,7 @@ function ServiceProviderSignupForm() {
           <TextField.Root
             required
             type="email"
-            placeholder="john.smith@email.com"
+            placeholder="jim.smith@email.com"
             mt="2"
             mb="1"
             {...register('email')}
