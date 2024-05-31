@@ -113,7 +113,7 @@ function CustomerSignupForm() {
 
     setTimeout(() => {
       router.push('/sign-in')
-    }, 5000)
+    }, 3000)
   }
 
   const onError = async ({
@@ -237,7 +237,7 @@ function ServiceProviderSignupForm() {
 
     setTimeout(() => {
       router.push('/sign-in')
-    }, 5000)
+    }, 3000)
   }
 
   const onError = async ({

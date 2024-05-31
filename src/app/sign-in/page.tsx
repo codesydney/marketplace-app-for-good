@@ -33,7 +33,7 @@ export default function Login({
       return redirect('/sign-in?message=Could not authenticate user')
     }
 
-    return redirect('/protected')
+    return redirect('/dashboard')
   }
 
   return (

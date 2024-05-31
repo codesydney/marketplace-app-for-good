@@ -11,21 +11,27 @@ export type Database = {
     Tables: {
       customers: {
         Row: {
+          created_at: string | null
           fullname: string
           preferred_name: string
           profile_picture: string | null
+          updated_at: string | null
           user_id: string
         }
         Insert: {
+          created_at?: string | null
           fullname: string
           preferred_name: string
           profile_picture?: string | null
+          updated_at?: string | null
           user_id: string
         }
         Update: {
+          created_at?: string | null
           fullname?: string
           preferred_name?: string
           profile_picture?: string | null
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: [
@@ -44,11 +50,13 @@ export type Database = {
           acn: string | null
           company_name: string
           cover_image_url: string | null
+          created_at: string | null
           fullname: string
           industry: string
           preferred_name: string
           profile_image_url: string | null
           slug: string
+          updated_at: string | null
           user_id: string
         }
         Insert: {
@@ -56,11 +64,13 @@ export type Database = {
           acn?: string | null
           company_name: string
           cover_image_url?: string | null
+          created_at?: string | null
           fullname: string
           industry: string
           preferred_name: string
           profile_image_url?: string | null
           slug: string
+          updated_at?: string | null
           user_id: string
         }
         Update: {
@@ -68,11 +78,13 @@ export type Database = {
           acn?: string | null
           company_name?: string
           cover_image_url?: string | null
+          created_at?: string | null
           fullname?: string
           industry?: string
           preferred_name?: string
           profile_image_url?: string | null
           slug?: string
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: [
@@ -85,30 +97,39 @@ export type Database = {
           },
         ]
       }
-      users: {
+      stripe_users: {
         Row: {
+          account_url: string | null
+          created_at: string | null
           id: string
-          role: Database['public']['Enums']['user_role'] | null
-          stripe_account_id: string | null
-          stripe_customer_id: string | null
+          onboarded: boolean
+          type: Database['public']['Enums']['user_type_enum']
+          updated_at: string | null
+          user_id: string
         }
         Insert: {
+          account_url?: string | null
+          created_at?: string | null
           id: string
-          role?: Database['public']['Enums']['user_role'] | null
-          stripe_account_id?: string | null
-          stripe_customer_id?: string | null
+          onboarded?: boolean
+          type: Database['public']['Enums']['user_type_enum']
+          updated_at?: string | null
+          user_id: string
         }
         Update: {
+          account_url?: string | null
+          created_at?: string | null
           id?: string
-          role?: Database['public']['Enums']['user_role'] | null
-          stripe_account_id?: string | null
-          stripe_customer_id?: string | null
+          onboarded?: boolean
+          type?: Database['public']['Enums']['user_type_enum']
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: 'users_id_fkey'
-            columns: ['id']
-            isOneToOne: true
+            foreignKeyName: 'stripe_users_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
             referencedRelation: 'users'
             referencedColumns: ['id']
           },
@@ -122,7 +143,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      user_role: 'Admin' | 'Customer' | 'ServiceProvider'
+      user_type_enum: 'SERVICE_PROVIDER' | 'CUSTOMER'
     }
     CompositeTypes: {
       [_ in never]: never

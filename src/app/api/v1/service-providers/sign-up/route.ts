@@ -86,17 +86,6 @@ async function handleServiceProviderSignup(
     role: 'service-provider',
     onboarded: false,
     preferred_name: preferredName,
-    fullname,
-    service_providers: {
-      stripe_account_id: null,
-      onboarding_url: null,
-    },
-    companyDetails: {
-      companyName,
-      abn,
-      acn,
-      industry,
-    },
   }
 
   const signupResult = await supabase.auth.signUp({
@@ -159,24 +148,19 @@ async function handleServiceProviderSignup(
     return { success: false, error: stripeRedirectError }
   }
 
-  // save to metadata
-  const updatedMetadata = {
-    role: 'service-provider',
-    onboarded: false,
-    preferred_name: preferredName,
-    fullname,
-    service_providers: {
-      stripe_account_id: serviceProviderId,
-      onboarding_url: stripeRedirect.url,
-    },
-  }
+  // save onboarding status
+  const insertOnboardingStatusResult = await supabase
+    .from('stripe_users')
+    .insert({
+      id: serviceProviderId,
+      user_id: userId,
+      type: 'SERVICE_PROVIDER',
+      onboarded: false,
+      account_url: stripeRedirect.url,
+    })
 
-  const updateAuthUserResult = await supabase.auth.updateUser({
-    data: updatedMetadata,
-  })
-
-  if (updateAuthUserResult.error) {
-    return { success: false, error: updateAuthUserResult.error }
+  if (insertOnboardingStatusResult.error) {
+    return { success: false, error: insertOnboardingStatusResult.error }
   }
 
   return { success: true, error: null }
