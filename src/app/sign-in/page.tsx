@@ -82,7 +82,7 @@ export default function Login({
                 </Box>
 
                 <Flex direction="row" width="100%" justify="end" gap="4">
-                  <Link href="/service-providers/sign-up">
+                  <Link href="/sign-up">
                     <Button type="button" color="indigo" variant="soft">
                       Create an account
                     </Button>
