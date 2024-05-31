@@ -16,11 +16,17 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { Form, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createClient } from '../../utils/supabase/client'
 import {
   CustomerSignupFormSchema,
   customerSignupFormSchema,
+  ServiceProviderSignupFormSchema,
+  serviceProviderSignupFormSchema,
 } from '@/types/forms'
+
+const URLS = {
+  CUSTOMERS: '/api/v1/customers/sign-up',
+  SERVICE_PROVIDERS: '/api/v1/service-providers/sign-up',
+} as const
 
 export default function SignUpForm() {
   const [userType, setUserType] = useState<'customers' | 'service-providers'>(
@@ -121,7 +127,7 @@ function CustomerSignupForm() {
 
   return (
     <Form
-      action="/api/v1/customers/sign-up"
+      action={URLS.CUSTOMERS}
       method="post"
       control={control}
       onSuccess={onSuccess}
@@ -211,47 +217,42 @@ function CustomerSignupForm() {
 }
 
 function ServiceProviderSignupForm() {
-  const signUp = async (formData: FormData) => {
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-    const preferredName = formData.get('preferred-name') as string
-    const fullname = formData.get('fullname') as string
-    const companyName = formData.get('company-name') as string
-    const abn = formData.get('abn') as string
-    const acn = formData.get('acn') as string
-    const industry = formData.get('industry') as string
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useForm<ServiceProviderSignupFormSchema>({
+    resolver: zodResolver(serviceProviderSignupFormSchema),
+  })
 
-    const supabase = createClient()
+  const onSuccess = async () => {
+    toast.success(
+      'Successfully created new customer account. Redirecting to sign in...',
+    )
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          role: 'service-provider',
-          onboarded: false,
-          // TODO migrate this to the backend since we don't this to be set on the frontend
-          preferredName,
-          fullname,
-          companyDetails: {
-            companyName,
-            abn,
-            acn,
-            industry,
-          },
-        },
-      },
-    })
+    setTimeout(() => {
+      redirect('/sign-in')
+    }, 5000)
+  }
 
-    if (error) {
-      return redirect('/sign-up?message=Could not authenticate user')
-    }
-
-    return redirect('/sign-up?message=Check email to continue sign in process')
+  const onError = async ({
+    response,
+  }: {
+    response?: Response
+    error?: unknown
+  }) => {
+    const responseBody = await response?.json()
+    toast.error(responseBody.message)
   }
 
   return (
-    <form method="post" action={signUp}>
+    <Form
+      action={URLS.SERVICE_PROVIDERS}
+      method="post"
+      control={control}
+      onSuccess={onSuccess}
+      onError={onError}
+    >
       <Flex direction="column" justify="center" align="center" gap="5">
         <Box width="100%">
           <Heading as="h2" size="5">
@@ -264,11 +265,13 @@ function ServiceProviderSignupForm() {
           </Text>
           <TextField.Root
             required
-            type="text"
-            name="company-name"
             placeholder="Jim's Mowing"
             mt="2"
+            {...register('company_name')}
           />
+          <Text as="label" color="red" align="left">
+            {errors.company_name?.message ?? ''}
+          </Text>
         </Box>
 
         <Box width="100%">
@@ -277,11 +280,13 @@ function ServiceProviderSignupForm() {
           </Text>
           <TextField.Root
             required
-            type="text"
-            name="abn"
             placeholder="12 345 678 901"
             mt="2"
+            {...register('abn')}
           />
+          <Text as="label" color="red" align="left">
+            {errors.industry?.message ?? ''}
+          </Text>
         </Box>
 
         <Box width="100%">
@@ -290,10 +295,13 @@ function ServiceProviderSignupForm() {
           </Text>
           <TextField.Root
             type="text"
-            name="acn"
             placeholder="123 456 789"
             mt="2"
+            {...register('acn')}
           />
+          <Text as="label" color="red" align="left">
+            {errors.industry?.message ?? ''}
+          </Text>
         </Box>
 
         <Box width="100%">
@@ -303,10 +311,13 @@ function ServiceProviderSignupForm() {
           <TextField.Root
             required
             type="text"
-            name="acn"
             placeholder="Lawnmowing"
             mt="2"
+            {...register('industry')}
           />
+          <Text as="label" color="red" align="left">
+            {errors.industry?.message ?? ''}
+          </Text>
         </Box>
 
         <Box width="100%">
@@ -320,11 +331,14 @@ function ServiceProviderSignupForm() {
           </Text>
           <TextField.Root
             required
-            type="text"
-            name="preferred-name"
             placeholder="John"
             mt="2"
+            mb="1"
+            {...register('preferred_name')}
           />
+          <Text as="label" color="red" align="left">
+            {errors.preferred_name?.message ?? ''}
+          </Text>
         </Box>
 
         <Box width="100%">
@@ -334,10 +348,14 @@ function ServiceProviderSignupForm() {
           <TextField.Root
             required
             type="text"
-            name="fullname"
-            placeholder="Jim Smith"
+            placeholder="John Smith"
             mt="2"
+            mb="1"
+            {...register('fullname')}
           />
+          <Text as="label" color="red" align="left">
+            {errors.fullname?.message ?? ''}
+          </Text>
         </Box>
 
         <Box width="100%">
@@ -347,10 +365,14 @@ function ServiceProviderSignupForm() {
           <TextField.Root
             required
             type="email"
-            name="email"
-            placeholder="jim.smith@email.com"
+            placeholder="john.smith@email.com"
             mt="2"
+            mb="1"
+            {...register('email')}
           />
+          <Text as="label" color="red" align="left">
+            {errors.email?.message ?? ''}
+          </Text>
         </Box>
 
         <Box width="100%">
@@ -360,10 +382,14 @@ function ServiceProviderSignupForm() {
           <TextField.Root
             required
             type="password"
-            name="password"
             placeholder="********"
             mt="2"
+            mb="1"
+            {...register('password')}
           />
+          <Text as="label" color="red" align="left">
+            {errors.password?.message ?? ''}
+          </Text>
         </Box>
 
         <Flex direction="row" width="100%" justify="end" gap="4">
@@ -377,6 +403,6 @@ function ServiceProviderSignupForm() {
           </Button>
         </Flex>
       </Flex>
-    </form>
+    </Form>
   )
 }
