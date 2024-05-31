@@ -11,16 +11,19 @@ export type Database = {
     Tables: {
       customers: {
         Row: {
+          fullname: string
           preferred_name: string
           profile_picture: string | null
           user_id: string
         }
         Insert: {
+          fullname: string
           preferred_name: string
           profile_picture?: string | null
           user_id: string
         }
         Update: {
+          fullname?: string
           preferred_name?: string
           profile_picture?: string | null
           user_id?: string
@@ -39,40 +42,42 @@ export type Database = {
         Row: {
           abn: string
           acn: string | null
+          company_name: string
           cover_image_url: string | null
-          name: string
+          fullname: string
+          industry: string
+          preferred_name: string
           profile_image_url: string | null
-          slug: string | null
+          slug: string
           user_id: string
         }
         Insert: {
           abn: string
           acn?: string | null
+          company_name: string
           cover_image_url?: string | null
-          name: string
+          fullname: string
+          industry: string
+          preferred_name: string
           profile_image_url?: string | null
-          slug?: string | null
+          slug: string
           user_id: string
         }
         Update: {
           abn?: string
           acn?: string | null
+          company_name?: string
           cover_image_url?: string | null
-          name?: string
+          fullname?: string
+          industry?: string
+          preferred_name?: string
           profile_image_url?: string | null
-          slug?: string | null
+          slug?: string
           user_id?: string
         }
         Relationships: [
           {
             foreignKeyName: 'service_providers_user_id_fkey'
-            columns: ['user_id']
-            isOneToOne: true
-            referencedRelation: 'users'
-            referencedColumns: ['id']
-          },
-          {
-            foreignKeyName: 'service_providers_user_id_fkey1'
             columns: ['user_id']
             isOneToOne: true
             referencedRelation: 'users'

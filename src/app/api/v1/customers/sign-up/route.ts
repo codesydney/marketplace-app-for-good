@@ -8,7 +8,7 @@ import { customerSignupFormSchema } from '@/types/forms'
 import { stripe } from '@/server/services/stripe'
 import { logger } from '@/server/lib/logger'
 
-type SignupResponse =
+export type SignupResponse =
   | {
       success: true
       message?: string
