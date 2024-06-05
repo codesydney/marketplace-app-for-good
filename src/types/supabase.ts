@@ -53,6 +53,7 @@ export type Database = {
           created_at: string | null
           fullname: string
           industry: string
+          onboarding_status: boolean
           preferred_name: string
           profile_image_url: string | null
           slug: string
@@ -67,6 +68,7 @@ export type Database = {
           created_at?: string | null
           fullname: string
           industry: string
+          onboarding_status?: boolean
           preferred_name: string
           profile_image_url?: string | null
           slug: string
@@ -81,6 +83,7 @@ export type Database = {
           created_at?: string | null
           fullname?: string
           industry?: string
+          onboarding_status?: boolean
           preferred_name?: string
           profile_image_url?: string | null
           slug?: string
