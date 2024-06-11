@@ -1,6 +1,7 @@
 import to from 'await-to-js'
 import { NextResponse } from 'next/server'
 
+import { validateStripeAccount, validateStripeUser } from './validation'
 import { stripe } from '@/server/services/stripe'
 import { createClient } from '@/utils/supabase/server'
 
@@ -24,14 +25,24 @@ export const GET = async (): Promise<NextResponse> => {
     return NextResponse.json({ success: false }, { status: 500 })
   }
 
-  if (stripeUser.type !== 'SERVICE_PROVIDER') {
-    return NextResponse.json({ success: false }, { status: 403 })
+  const stripeUserValidation = validateStripeUser(stripeUser)
+
+  if (!stripeUserValidation.success) {
+    return NextResponse.json(
+      { success: false },
+      { status: stripeUserValidation.status },
+    )
   }
 
   const account = await stripe.accounts.retrieve(stripeUser.id)
 
-  if (stripeUser.onboarded || !account.details_submitted) {
-    return NextResponse.json({ success: false }, { status: 400 })
+  const stripeAccountValidation = validateStripeAccount(account)
+
+  if (!stripeAccountValidation.success) {
+    return NextResponse.json(
+      { success: false },
+      { status: stripeUserValidation.status },
+    )
   }
 
   const [accountLinkError, accountLink] = await to(
