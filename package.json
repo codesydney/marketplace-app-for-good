@@ -14,6 +14,7 @@
     "changeset:version": "changeset version",
     "supabase:start": "npx supabase start",
     "supabase:stop": "npx supabase stop",
+    "supabase:db-push-local": "npx supabase db push --local",
     "supabase:db-push": "npx supabase db push",
     "supabase:migrations-add": "npx supabase migration new",
     "supabase:generate-types": "npx supabase gen types typescript --project-id $PROJECT_REF --schema public > src/types/supabase.ts",
