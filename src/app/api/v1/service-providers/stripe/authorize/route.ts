@@ -5,6 +5,12 @@ import { validateStripeAccount, validateStripeUser } from './validation'
 import { stripe } from '@/server/services/stripe'
 import { createClient } from '@/utils/supabase/server'
 
+/**
+ * GET /api/v1/service-providers/stripe/authorize
+ *
+ * Redirects a Service Provider user to the Stripe Connect onboarding page.
+ * If the user has already been onboarded, this returns a 409 Conflict instead.
+ */
 export const GET = async (): Promise<NextResponse> => {
   const supabase = createClient()
   const {

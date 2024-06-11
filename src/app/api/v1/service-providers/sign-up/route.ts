@@ -11,6 +11,7 @@ import { stripe } from '@/server/services/stripe'
 import { createClient } from '@/utils/supabase/server'
 
 /**
+ * /api/v1/service-providers/sign-up
  * This function handles error and success responses for the Service Provider sign-up route.
  * See the handleServiceProviderSignup function for the main logic.
  */
