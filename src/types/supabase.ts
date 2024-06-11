@@ -102,7 +102,6 @@ export type Database = {
       }
       stripe_users: {
         Row: {
-          account_url: string | null
           created_at: string | null
           id: string
           onboarded: boolean
@@ -111,7 +110,6 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          account_url?: string | null
           created_at?: string | null
           id: string
           onboarded?: boolean
@@ -120,7 +118,6 @@ export type Database = {
           user_id: string
         }
         Update: {
-          account_url?: string | null
           created_at?: string | null
           id?: string
           onboarded?: boolean
