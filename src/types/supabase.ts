@@ -140,7 +140,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      update_service_provider_onboarding: {
+        Args: {
+          p_user_id: string
+          p_onboarding_status: boolean
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       user_type_enum: 'SERVICE_PROVIDER' | 'CUSTOMER'
