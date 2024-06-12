@@ -16,8 +16,9 @@
     "supabase:stop": "npx supabase stop",
     "supabase:db-push-local": "npx supabase db push --local",
     "supabase:db-push": "npx supabase db push",
-    "supabase:migrations-add": "npx supabase migration new",
+    "supabase:dump-local": "npx supabase db dump -f ./supabase/seed.sql --data-only --local",
     "supabase:generate-types": "npx supabase gen types typescript --project-id $PROJECT_REF --schema public > src/types/supabase.ts",
+    "supabase:migrations-add": "npx supabase migration new",
     "supabase:reset": "npx supabase db reset --local",
     "supabase:reset:debug": "npx supabase db reset --local --debug",
     "prepare": "husky install"
