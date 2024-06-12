@@ -1,6 +1,14 @@
 import React from 'react'
-import { TextField, Heading, Table, Badge } from '@radix-ui/themes'
+import {
+  Badge,
+  Button,
+  Flex,
+  Heading,
+  Table,
+  TextField,
+} from '@radix-ui/themes'
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
+import Link from 'next/link'
 import { formatDate } from '@/utils/utils'
 import HeaderInfoCard from '@/components/header-info-card/HeaderInfoCard'
 import FilterSelector from '@/components/filter-selector/FilterSelector'
@@ -70,16 +78,24 @@ export default function Task() {
           return <HeaderInfoCard key={index} data={item} />
         })}
       </div>
-      <div className="mt-4 flex gap-2">
-        <TextField.Root placeholder="Search task…">
-          <TextField.Slot>
-            <MagnifyingGlassIcon height="16" width="16" />
-          </TextField.Slot>
-        </TextField.Root>
+      <Flex justify="between">
+        <div className="mt-4 flex gap-2">
+          <TextField.Root placeholder="Search task…">
+            <TextField.Slot>
+              <MagnifyingGlassIcon height="16" width="16" />
+            </TextField.Slot>
+          </TextField.Root>
 
-        <FilterSelector label={category.label} options={category.options} />
-        <FilterSelector label={status.label} options={status.options} />
-      </div>
+          <FilterSelector label={category.label} options={category.options} />
+          <FilterSelector label={status.label} options={status.options} />
+        </div>
+
+        <Link href="/task/create">
+          <Button mt="4" color="green">
+            Create a Task
+          </Button>
+        </Link>
+      </Flex>
 
       <div>
         <DashboardTable
