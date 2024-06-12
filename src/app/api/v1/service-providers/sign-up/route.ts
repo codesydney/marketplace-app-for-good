@@ -5,12 +5,13 @@ import Stripe from 'stripe'
 import { ZodError } from 'zod'
 
 import { SignupResponse } from '../../customers/sign-up/route'
-import { createClient } from '@/utils/supabase/server'
 import { serviceProviderSignupFormSchema } from '@/types/forms'
 import { logger } from '@/server/lib/logger'
 import { stripe } from '@/server/services/stripe'
+import { createClient } from '@/utils/supabase/server'
 
 /**
+ * /api/v1/service-providers/sign-up
  * This function handles error and success responses for the Service Provider sign-up route.
  * See the handleServiceProviderSignup function for the main logic.
  */
@@ -59,7 +60,6 @@ async function handleServiceProviderSignup(
   | { success: false; error: Error | PostgrestError }
   | { success: true; error: null }
 > {
-  // validation
   const supabase = createClient()
 
   const validationResult = serviceProviderSignupFormSchema.safeParse(
@@ -115,6 +115,7 @@ async function handleServiceProviderSignup(
         preferred_name: preferredName,
         fullname,
         slug: slugify(companyName),
+        onboarding_status: false,
       },
     ])
 
@@ -139,28 +140,15 @@ async function handleServiceProviderSignup(
 
   const serviceProviderId = stripeAccount.id
 
-  // get onboarding url
-  const [stripeRedirectError, stripeRedirect] = await to(
-    createStripeConnectRedirectLink(serviceProviderId),
-  )
+  const insertStripeUsersResult = await supabase.from('stripe_users').insert({
+    id: serviceProviderId,
+    user_id: userId,
+    type: 'SERVICE_PROVIDER',
+    onboarded: false,
+  })
 
-  if (stripeRedirectError) {
-    return { success: false, error: stripeRedirectError }
-  }
-
-  // save onboarding status
-  const insertOnboardingStatusResult = await supabase
-    .from('stripe_users')
-    .insert({
-      id: serviceProviderId,
-      user_id: userId,
-      type: 'SERVICE_PROVIDER',
-      onboarded: false,
-      account_url: stripeRedirect.url,
-    })
-
-  if (insertOnboardingStatusResult.error) {
-    return { success: false, error: insertOnboardingStatusResult.error }
+  if (insertStripeUsersResult.error) {
+    return { success: false, error: insertStripeUsersResult.error }
   }
 
   return { success: true, error: null }
@@ -193,18 +181,6 @@ export async function createStripeConnectAccount(
   return await stripe.accounts.create(accountParams)
 }
 
-export async function createStripeConnectRedirectLink(accountId: string) {
-  if (!process.env.STRIPE_RETURN_URL || !process.env.STRIPE_REFRESH_URL)
-    throw new Error('STRIPE_RETURN_URL or STRIPE_REFRESH_URL not set')
-
-  return await stripe.accountLinks.create({
-    account: accountId,
-    return_url: process.env.STRIPE_RETURN_URL,
-    refresh_url: process.env.STRIPE_REFRESH_URL,
-    type: 'account_onboarding',
-    collect: 'eventually_due',
-  })
-}
 /**
  * Slugifies a string.
  * @param s
