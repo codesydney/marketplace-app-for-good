@@ -9,6 +9,44 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      addresses: {
+        Row: {
+          address_line_1: string
+          address_line_2: string | null
+          country: string
+          id: string
+          postal_code: string
+          suburb: string
+          user_id: string
+        }
+        Insert: {
+          address_line_1: string
+          address_line_2?: string | null
+          country: string
+          id?: string
+          postal_code: string
+          suburb: string
+          user_id: string
+        }
+        Update: {
+          address_line_1?: string
+          address_line_2?: string | null
+          country?: string
+          id?: string
+          postal_code?: string
+          suburb?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'addresses_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       customers: {
         Row: {
           created_at: string | null
@@ -135,6 +173,63 @@ export type Database = {
           },
         ]
       }
+      tasks: {
+        Row: {
+          address_id: string
+          budget: number
+          created_at: string | null
+          customer_id: string
+          description: string
+          due_date: string
+          due_date_type: Database['public']['Enums']['task_due_date_type_enum']
+          id: string
+          status: string
+          title: Database['public']['Enums']['task_status_enum']
+          updated_at: string | null
+        }
+        Insert: {
+          address_id: string
+          budget: number
+          created_at?: string | null
+          customer_id: string
+          description: string
+          due_date: string
+          due_date_type?: Database['public']['Enums']['task_due_date_type_enum']
+          id?: string
+          status: string
+          title?: Database['public']['Enums']['task_status_enum']
+          updated_at?: string | null
+        }
+        Update: {
+          address_id?: string
+          budget?: number
+          created_at?: string | null
+          customer_id?: string
+          description?: string
+          due_date?: string
+          due_date_type?: Database['public']['Enums']['task_due_date_type_enum']
+          id?: string
+          status?: string
+          title?: Database['public']['Enums']['task_status_enum']
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'tasks_address_id_fkey'
+            columns: ['address_id']
+            isOneToOne: false
+            referencedRelation: 'addresses'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'tasks_customer_id_fkey'
+            columns: ['customer_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -149,6 +244,8 @@ export type Database = {
       }
     }
     Enums: {
+      task_due_date_type_enum: 'ON_DATE' | 'BEFORE_DATE'
+      task_status_enum: 'OPEN' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
       user_type_enum: 'SERVICE_PROVIDER' | 'CUSTOMER'
     }
     CompositeTypes: {
