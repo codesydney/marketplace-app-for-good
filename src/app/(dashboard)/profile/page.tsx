@@ -37,7 +37,7 @@ export default function ProfilePage() {
       const data = await getServiceProviderData(userId as string)
       if (data) {
         setFormData({
-          name: data.name || '',
+          name: data.company_name || '',
           profileImage: data.profile_image_url || '',
           coverImage: data.cover_image_url || '',
           abn: data.abn || '',
