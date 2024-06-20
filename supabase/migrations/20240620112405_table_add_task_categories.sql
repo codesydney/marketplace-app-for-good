@@ -4,4 +4,6 @@ create table task_categories (
 );
 
 alter table tasks
-add column task_categories_id integer references task_categories(id) not null;
+add column task_category_id integer references task_categories(id) not null;
+
+create index tasks_task_categories_id_fkey on tasks(task_category_id);

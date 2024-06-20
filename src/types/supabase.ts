@@ -201,7 +201,7 @@ export type Database = {
           postcode: string
           status: Database['public']['Enums']['task_status_enum']
           suburb: string
-          task_categories_id: number
+          task_category_id: number
           title: string
           updated_at: string | null
         }
@@ -217,7 +217,7 @@ export type Database = {
           postcode: string
           status?: Database['public']['Enums']['task_status_enum']
           suburb: string
-          task_categories_id: number
+          task_category_id: number
           title: string
           updated_at?: string | null
         }
@@ -233,7 +233,7 @@ export type Database = {
           postcode?: string
           status?: Database['public']['Enums']['task_status_enum']
           suburb?: string
-          task_categories_id?: number
+          task_category_id?: number
           title?: string
           updated_at?: string | null
         }
@@ -253,8 +253,8 @@ export type Database = {
             referencedColumns: ['id']
           },
           {
-            foreignKeyName: 'tasks_task_categories_id_fkey'
-            columns: ['task_categories_id']
+            foreignKeyName: 'tasks_task_category_id_fkey'
+            columns: ['task_category_id']
             isOneToOne: false
             referencedRelation: 'task_categories'
             referencedColumns: ['id']
