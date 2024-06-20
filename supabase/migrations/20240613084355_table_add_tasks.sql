@@ -11,6 +11,8 @@ create table tasks (
   status task_status_enum not null default 'OPEN',
   due_date date not null,
   due_date_type task_due_date_type_enum not null default 'BEFORE_DATE',
+  suburb text not null,
+  postcode text not null,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );

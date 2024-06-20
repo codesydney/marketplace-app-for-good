@@ -4,6 +4,6 @@ create table addresses (
   address_line_1 text not null,
   address_line_2 text,
   suburb text not null,
-  postal_code text not null,
+  postcode text not null,
   country text not null
 );
