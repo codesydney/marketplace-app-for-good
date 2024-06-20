@@ -16,3 +16,6 @@ create table tasks (
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
+
+create index tasks_customer_id_fkey on tasks(customer_id);
+create index tasks_address_id_fkey on tasks(address_id);
