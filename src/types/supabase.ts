@@ -15,7 +15,7 @@ export type Database = {
           address_line_2: string | null
           country: string
           id: string
-          postal_code: string
+          postcode: string
           suburb: string
           user_id: string
         }
@@ -24,7 +24,7 @@ export type Database = {
           address_line_2?: string | null
           country: string
           id?: string
-          postal_code: string
+          postcode: string
           suburb: string
           user_id: string
         }
@@ -33,7 +33,7 @@ export type Database = {
           address_line_2?: string | null
           country?: string
           id?: string
-          postal_code?: string
+          postcode?: string
           suburb?: string
           user_id?: string
         }
@@ -46,21 +46,6 @@ export type Database = {
             referencedColumns: ['id']
           },
         ]
-      }
-      categories: {
-        Row: {
-          id: number
-          name: string
-        }
-        Insert: {
-          id?: number
-          name: string
-        }
-        Update: {
-          id?: number
-          name?: string
-        }
-        Relationships: []
       }
       customers: {
         Row: {
@@ -188,47 +173,68 @@ export type Database = {
           },
         ]
       }
+      task_categories: {
+        Row: {
+          id: number
+          name: string
+        }
+        Insert: {
+          id?: number
+          name: string
+        }
+        Update: {
+          id?: number
+          name?: string
+        }
+        Relationships: []
+      }
       tasks: {
         Row: {
           address_id: string
           budget: number
-          category_id: number
           created_at: string | null
           customer_id: string
           description: string
           due_date: string
           due_date_type: Database['public']['Enums']['task_due_date_type_enum']
           id: string
-          status: string
-          title: Database['public']['Enums']['task_status_enum']
+          postcode: string
+          status: Database['public']['Enums']['task_status_enum']
+          suburb: string
+          task_categories_id: number
+          title: string
           updated_at: string | null
         }
         Insert: {
           address_id: string
           budget: number
-          category_id: number
           created_at?: string | null
           customer_id: string
           description: string
           due_date: string
           due_date_type?: Database['public']['Enums']['task_due_date_type_enum']
           id?: string
-          status: string
-          title?: Database['public']['Enums']['task_status_enum']
+          postcode: string
+          status?: Database['public']['Enums']['task_status_enum']
+          suburb: string
+          task_categories_id: number
+          title: string
           updated_at?: string | null
         }
         Update: {
           address_id?: string
           budget?: number
-          category_id?: number
           created_at?: string | null
           customer_id?: string
           description?: string
           due_date?: string
           due_date_type?: Database['public']['Enums']['task_due_date_type_enum']
           id?: string
-          status?: string
-          title?: Database['public']['Enums']['task_status_enum']
+          postcode?: string
+          status?: Database['public']['Enums']['task_status_enum']
+          suburb?: string
+          task_categories_id?: number
+          title?: string
           updated_at?: string | null
         }
         Relationships: [
@@ -240,17 +246,17 @@ export type Database = {
             referencedColumns: ['id']
           },
           {
-            foreignKeyName: 'tasks_category_id_fkey'
-            columns: ['category_id']
-            isOneToOne: false
-            referencedRelation: 'categories'
-            referencedColumns: ['id']
-          },
-          {
             foreignKeyName: 'tasks_customer_id_fkey'
             columns: ['customer_id']
             isOneToOne: false
             referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'tasks_task_categories_id_fkey'
+            columns: ['task_categories_id']
+            isOneToOne: false
+            referencedRelation: 'task_categories'
             referencedColumns: ['id']
           },
         ]
