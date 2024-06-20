@@ -47,6 +47,21 @@ export type Database = {
           },
         ]
       }
+      categories: {
+        Row: {
+          id: number
+          name: string
+        }
+        Insert: {
+          id?: number
+          name: string
+        }
+        Update: {
+          id?: number
+          name?: string
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           created_at: string | null
@@ -177,6 +192,7 @@ export type Database = {
         Row: {
           address_id: string
           budget: number
+          category_id: number
           created_at: string | null
           customer_id: string
           description: string
@@ -190,6 +206,7 @@ export type Database = {
         Insert: {
           address_id: string
           budget: number
+          category_id: number
           created_at?: string | null
           customer_id: string
           description: string
@@ -203,6 +220,7 @@ export type Database = {
         Update: {
           address_id?: string
           budget?: number
+          category_id?: number
           created_at?: string | null
           customer_id?: string
           description?: string
@@ -219,6 +237,13 @@ export type Database = {
             columns: ['address_id']
             isOneToOne: false
             referencedRelation: 'addresses'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'tasks_category_id_fkey'
+            columns: ['category_id']
+            isOneToOne: false
+            referencedRelation: 'categories'
             referencedColumns: ['id']
           },
           {
