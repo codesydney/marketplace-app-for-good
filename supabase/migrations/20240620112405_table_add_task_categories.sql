@@ -1,6 +1,6 @@
 create table task_categories (
   id serial PRIMARY KEY,
-  name text NOT NULL
+  name text NOT NULL UNIQUE
 );
 
 alter table tasks
