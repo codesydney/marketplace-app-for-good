@@ -11,7 +11,8 @@ import FilterSelector from '@/components/filter-selector/FilterSelector'
 import DashboardTable from '@/components/dashboard-table/DashboardTable'
 import TableActionMenu from '@/components/table-action-menu/TableActionMenu'
 
-import { createClient } from '@/utils/supabase/client'
+import { TasksRepository } from '@/data/tasks'
+import { useSessionQuery } from '@/hooks/use-auth-queries'
 
 // TODO: move the type definitions to it's own folders/files
 type TaskHeaderCard = {
@@ -49,38 +50,20 @@ const status: FilterOption = {
   ],
 }
 
-async function getCustomerTasks() {
-  const supabase = createClient()
-  const {
-    data: { session },
-    error: sessionError,
-  } = await supabase.auth.getSession()
-
-  const userId = session?.user?.id
-
-  if (sessionError || !userId) {
-    return null
-  }
-
-  const { data } = await supabase
-    .from('tasks')
-    .select('*')
-    .eq('customer_id', userId)
-
-  return data
-}
-
-function useCustomerTasksQuery() {
+function useCustomerTasksQuery(userId: string | undefined) {
   const query = useQuery({
     queryKey: ['tasks'],
-    queryFn: getCustomerTasks,
+    queryFn: () => TasksRepository.getCustomerTasks(userId!),
+    enabled: !!userId,
   })
 
   return query
 }
 
 export default function TasksPage() {
-  const { data: tasks } = useCustomerTasksQuery()
+  const { data: sessionData } = useSessionQuery()
+  const userId = sessionData?.session?.user.id
+  const { data: tasks } = useCustomerTasksQuery(userId)
 
   return (
     <div className="flex flex-col gap-2 px-4">
