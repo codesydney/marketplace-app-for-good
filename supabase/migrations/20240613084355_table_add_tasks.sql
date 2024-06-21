@@ -3,7 +3,7 @@ create type task_due_date_type_enum AS ENUM ('ON_DATE', 'BEFORE_DATE');
 
 create table tasks (
   id uuid primary key default gen_random_uuid(),
-  customer_id uuid references auth.users(id) not null,
+  customer_id uuid references customers(user_id) not null,
   address_id uuid references addresses(id) not null,
   title text not null,
   description text not null,
