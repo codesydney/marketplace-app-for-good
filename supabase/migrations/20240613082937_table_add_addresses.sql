@@ -7,3 +7,5 @@ create table addresses (
   postcode text not null,
   country text not null
 );
+
+create index addresses_user_id_fkey on addresses(user_id);
