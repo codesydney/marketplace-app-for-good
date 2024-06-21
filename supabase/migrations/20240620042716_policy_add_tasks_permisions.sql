@@ -12,4 +12,5 @@ with check ( (select auth.uid()) = customer_id );
 
 create policy "customer user can update their own tasks"
 on tasks for update
+to authenticated
 using ( (select auth.uid()) = customer_id );
