@@ -3,7 +3,6 @@
 import React from 'react'
 import { TextField, Heading, Table, Badge } from '@radix-ui/themes'
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
-import { useQuery } from '@tanstack/react-query'
 
 import { formatDate } from '@/utils/utils'
 import HeaderInfoCard from '@/components/header-info-card/HeaderInfoCard'
@@ -11,8 +10,8 @@ import FilterSelector from '@/components/filter-selector/FilterSelector'
 import DashboardTable from '@/components/dashboard-table/DashboardTable'
 import TableActionMenu from '@/components/table-action-menu/TableActionMenu'
 
-import { TasksRepository } from '@/data/tasks'
 import { useSessionQuery } from '@/hooks/use-auth-queries'
+import { useCustomerTasksQuery } from '@/hooks/use-task-queries'
 
 // TODO: move the type definitions to it's own folders/files
 type TaskHeaderCard = {
@@ -48,16 +47,6 @@ const status: FilterOption = {
     { key: 'completed', value: 'completed' },
     { key: 'cancelled', value: 'cancelled' },
   ],
-}
-
-function useCustomerTasksQuery(userId: string | undefined) {
-  const query = useQuery({
-    queryKey: ['tasks'],
-    queryFn: () => TasksRepository.getCustomerTasks(userId!),
-    enabled: !!userId,
-  })
-
-  return query
 }
 
 export default function TasksPage() {
