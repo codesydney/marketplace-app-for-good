@@ -13,8 +13,8 @@ create table tasks (
   due_date_type task_due_date_type_enum not null default 'BEFORE_DATE',
   suburb text not null,
   postcode text not null,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
+  created_at timestamptz default now() not null,
+  updated_at timestamptz default now() not null
 );
 
 create index tasks_customer_id_fkey on tasks(customer_id);

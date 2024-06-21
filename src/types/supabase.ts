@@ -192,7 +192,7 @@ export type Database = {
         Row: {
           address_id: string
           budget: number
-          created_at: string | null
+          created_at: string
           customer_id: string
           description: string
           due_date: string
@@ -203,12 +203,12 @@ export type Database = {
           suburb: string
           task_category_id: number
           title: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
           address_id: string
           budget: number
-          created_at?: string | null
+          created_at?: string
           customer_id: string
           description: string
           due_date: string
@@ -219,12 +219,12 @@ export type Database = {
           suburb: string
           task_category_id: number
           title: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
           address_id?: string
           budget?: number
-          created_at?: string | null
+          created_at?: string
           customer_id?: string
           description?: string
           due_date?: string
@@ -235,7 +235,7 @@ export type Database = {
           suburb?: string
           task_category_id?: number
           title?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
