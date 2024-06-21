@@ -11,16 +11,16 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: 'Next.js and Supabase Starter Kit',
-  description: 'The fastest way to build apps with Next.js and Supabase',
+  title: 'Marketplace App for Good',
+  description: '',
 }
 
 export default function RootLayout({ children }: PropsWithChildren<{}>) {
   return (
     <html lang="en" className={GeistSans.className}>
-      <body className="bg-background text-foreground prose max-w-full">
+      <body className="text-foreground prose max-w-full">
         <AppProviders>
-          <main className="flex h-full min-h-screen flex-col items-center">
+          <main className="flex h-full min-h-screen flex-col items-center bg-slate-200">
             {children}
           </main>
         </AppProviders>
