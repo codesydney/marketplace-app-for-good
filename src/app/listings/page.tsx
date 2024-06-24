@@ -12,7 +12,7 @@ import {
 } from '@radix-ui/themes'
 import { CalendarIcon, SewingPinFilledIcon } from '@radix-ui/react-icons'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { formatDate, toCurrencyString } from '@/utils/utils'
 import { useTaskListingsQuery } from '@/hooks/use-task-queries'
@@ -20,9 +20,11 @@ import { Task } from '@/types/utility-types'
 
 export default function TasksPage() {
   const { data: tasks } = useTaskListingsQuery()
-  const [activeTask, setActiveTask] = useState<Task | undefined>(
-    tasks && tasks.length > 0 ? tasks[0] : undefined,
-  )
+  const [activeTask, setActiveTask] = useState<Task | undefined>(undefined)
+
+  useEffect(() => {
+    if (!activeTask && tasks && tasks.length > 0) setActiveTask(tasks[0])
+  }, [tasks])
 
   return (
     <Flex
