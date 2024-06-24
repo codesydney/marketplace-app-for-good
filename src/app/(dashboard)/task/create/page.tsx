@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import {
   Card,
@@ -7,22 +9,71 @@ import {
   TextArea,
   TextField,
 } from '@radix-ui/themes'
-import { Form, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/router'
 import { createTaskForm, CreateTaskFormData } from '@/types/forms'
+import { InsertRecord } from '@/types/utility-types'
+import { createClient } from '@/utils/supabase/client'
 
 export default function Task() {
+  const router = useRouter()
+
   const {
     register,
+    handleSubmit,
     // formState: { errors },
   } = useForm<CreateTaskFormData>({
     resolver: zodResolver(createTaskForm),
   })
 
+  const onSubmit: SubmitHandler<CreateTaskFormData> = async data => {
+    const supabase = createClient()
+
+    const addressPayload: InsertRecord<'addresses'> = {
+      ...data.address,
+      user_id: '',
+    }
+
+    const addressResult = await supabase
+      .from('addresses')
+      .insert(addressPayload)
+      .select()
+      .single()
+
+    if (addressResult.error) {
+      // TODO
+      throw addressResult.error
+    }
+
+    const addressId = addressResult.data.id
+
+    const taskPayload: InsertRecord<'tasks'> = {
+      ...data,
+      address_id: addressId,
+      postcode: data.address.postcode,
+      suburb: data.address.suburb,
+    }
+
+    const createTaskResult = await supabase
+      .from('tasks')
+      .insert(taskPayload)
+      .select()
+      .single()
+
+    if (createTaskResult.error) {
+      // TODO
+      throw createTaskResult.error
+    }
+
+    const taskId = createTaskResult.data.id
+    router.push(`/task/${taskId}`)
+  }
+
   return (
     <div className="flex flex-col gap-2 px-4">
       <Card size="3">
-        <Form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Flex align="center" justify="between" my="4">
             <Heading as="h2" size="6" trim="both">
               Create new task
@@ -166,7 +217,7 @@ export default function Task() {
               </Flex>
             </Flex>
           </Flex>
-        </Form>
+        </form>
       </Card>
     </div>
   )
