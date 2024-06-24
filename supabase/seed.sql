@@ -148,13 +148,12 @@ INSERT INTO "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "r
 -- Data for Name: addresses; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."addresses" ("id", "user_id", "address_line_1", "address_line_2", "suburb", "postcode", "country") VALUES
-	('bf99c3a1-670a-4e72-b3ed-1188c34c6b20', 'db504299-b45e-4879-abe6-3b426590ac5a', '123 George Street', 'Suite 45', 'Sydney', '2000', 'Australia'),
-	('d6384966-8e9b-4115-984e-35baca02d85d', 'db504299-b45e-4879-abe6-3b426590ac5a', '456 Collins Street', 'Apt 12B', 'Melbourne', '3000', 'Australia'),
-	('90074ab9-518a-4a91-9ac5-f07dba8c6c34', 'db504299-b45e-4879-abe6-3b426590ac5a', '789 Queen Street', NULL, 'Brisbane', '4000', 'Australia'),
-	('23da2644-fc8c-4710-99cf-0e6352544987', 'db504299-b45e-4879-abe6-3b426590ac5a', '101 North Terrace', 'Floor 2', 'Adelaide', '5000', 'Australia'),
-	('f588c3e5-79f6-41db-accf-6f5abab6b388', 'db504299-b45e-4879-abe6-3b426590ac5a', '202 Murray Street', NULL, 'Perth', '6000', 'Australia');
-
+INSERT INTO "public"."addresses" ("id", "user_id", "address_line_1", "address_line_2", "suburb", "state", "postcode", "country") VALUES
+	('bf99c3a1-670a-4e72-b3ed-1188c34c6b20', 'db504299-b45e-4879-abe6-3b426590ac5a', '123 George Street', 'Suite 45', 'Sydney', 'NSW', '2000', 'Australia'),
+	('d6384966-8e9b-4115-984e-35baca02d85d', 'db504299-b45e-4879-abe6-3b426590ac5a', '456 Collins Street', 'Apt 12B', 'Melbourne', 'VIC', '3000', 'Australia'),
+	('90074ab9-518a-4a91-9ac5-f07dba8c6c34', 'db504299-b45e-4879-abe6-3b426590ac5a', '789 Queen Street', NULL, 'Brisbane', 'QLD', '4000', 'Australia'),
+	('23da2644-fc8c-4710-99cf-0e6352544987', 'db504299-b45e-4879-abe6-3b426590ac5a', '101 North Terrace', 'Floor 2', 'Adelaide', 'SA', '5000', 'Australia'),
+	('f588c3e5-79f6-41db-accf-6f5abab6b388', 'db504299-b45e-4879-abe6-3b426590ac5a', '202 Murray Street', NULL, 'Perth', 'WA', '6000', 'Australia');
 
 --
 -- Data for Name: customers; Type: TABLE DATA; Schema: public; Owner: postgres

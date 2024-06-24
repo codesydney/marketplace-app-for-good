@@ -16,6 +16,7 @@ export type Database = {
           country: string
           id: string
           postcode: string
+          state: Database['public']['Enums']['aus_state_enum']
           suburb: string
           user_id: string
         }
@@ -25,6 +26,7 @@ export type Database = {
           country: string
           id?: string
           postcode: string
+          state: Database['public']['Enums']['aus_state_enum']
           suburb: string
           user_id: string
         }
@@ -34,6 +36,7 @@ export type Database = {
           country?: string
           id?: string
           postcode?: string
+          state?: Database['public']['Enums']['aus_state_enum']
           suburb?: string
           user_id?: string
         }
@@ -249,8 +252,8 @@ export type Database = {
             foreignKeyName: 'tasks_customer_id_fkey'
             columns: ['customer_id']
             isOneToOne: false
-            referencedRelation: 'users'
-            referencedColumns: ['id']
+            referencedRelation: 'customers'
+            referencedColumns: ['user_id']
           },
           {
             foreignKeyName: 'tasks_task_category_id_fkey'
@@ -275,6 +278,7 @@ export type Database = {
       }
     }
     Enums: {
+      aus_state_enum: 'NSW' | 'VIC' | 'QLD' | 'SA' | 'WA' | 'TAS' | 'NT' | 'ACT'
       task_due_date_type_enum: 'ON_DATE' | 'BEFORE_DATE'
       task_status_enum: 'OPEN' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
       user_type_enum: 'SERVICE_PROVIDER' | 'CUSTOMER'
