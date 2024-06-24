@@ -45,7 +45,9 @@ export type CreateTaskFormData = Omit<
   | 'postcode'
   | 'updated_at'
   | 'created_at'
+  | 'due_date'
 > & {
+  due_date: Date
   address: Omit<Address, 'id' | 'user_id'>
 }
 
@@ -55,7 +57,7 @@ export const createTaskForm: z.ZodSchema<CreateTaskFormData> = z.object({
   title: z.string(),
   budget: z.number(),
   description: z.string(),
-  due_date: z.string(),
+  due_date: z.coerce.date(),
   due_date_type: z.enum(['ON_DATE', 'BEFORE_DATE']),
   address: z.object({
     address_line_1: z.string(),

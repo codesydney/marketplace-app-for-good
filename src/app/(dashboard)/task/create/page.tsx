@@ -1,7 +1,9 @@
 'use client'
-
 import React from 'react'
+import { Calendar } from 'react-date-range'
 import {
+  Box,
+  Button,
   Card,
   Flex,
   Heading,
@@ -9,9 +11,9 @@ import {
   TextArea,
   TextField,
 } from '@radix-ui/themes'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { createTaskForm, CreateTaskFormData } from '@/types/forms'
 import { InsertRecord } from '@/types/utility-types'
 import { createClient } from '@/utils/supabase/client'
@@ -20,11 +22,13 @@ export default function Task() {
   const router = useRouter()
 
   const {
+    control,
     register,
     handleSubmit,
-    // formState: { errors },
+    formState: { errors },
   } = useForm<CreateTaskFormData>({
     resolver: zodResolver(createTaskForm),
+    defaultValues: { due_date: new Date() },
   })
 
   const onSubmit: SubmitHandler<CreateTaskFormData> = async data => {
@@ -50,6 +54,7 @@ export default function Task() {
 
     const taskPayload: InsertRecord<'tasks'> = {
       ...data,
+      due_date: data.due_date.toISOString(),
       address_id: addressId,
       postcode: data.address.postcode,
       suburb: data.address.suburb,
@@ -96,6 +101,7 @@ export default function Task() {
                 variant="surface"
                 placeholder="End of Lease Clean"
               />
+              <Text color="tomato">{errors.title?.message}</Text>
             </Flex>
 
             <Flex direction="column" gap="2">
@@ -107,6 +113,7 @@ export default function Task() {
                 variant="surface"
                 placeholder="I am moving out of my 2 bedroom unit and will a cleaner to clean the unit before I hand the keys back."
               />
+              <Text color="tomato">{errors.title?.message}</Text>
             </Flex>
 
             <Flex direction="column" gap="2">
@@ -118,6 +125,7 @@ export default function Task() {
                 variant="surface"
                 placeholder="Cleaning"
               />
+              <Text color="tomato">{errors.title?.message}</Text>
             </Flex>
 
             <Flex direction="column" gap="2">
@@ -132,6 +140,7 @@ export default function Task() {
               >
                 <TextField.Slot>$</TextField.Slot>
               </TextField.Root>
+              <Text color="tomato">{errors.title?.message}</Text>
             </Flex>
 
             <Flex direction="column" gap="2">
@@ -150,6 +159,9 @@ export default function Task() {
                   placeholder="123 George St"
                   {...register('address.address_line_1')}
                 />
+                <Text color="tomato">
+                  {errors.address?.address_line_1?.message}
+                </Text>
               </Flex>
 
               <Flex direction="column" gap="2">
@@ -161,6 +173,9 @@ export default function Task() {
                   placeholder=""
                   {...register('address.address_line_2')}
                 />
+                <Text color="tomato">
+                  {errors.address?.address_line_2?.message}
+                </Text>
               </Flex>
 
               <Flex direction="column" gap="2">
@@ -172,6 +187,7 @@ export default function Task() {
                   placeholder="Sydney"
                   {...register('address.suburb')}
                 />
+                <Text color="tomato">{errors.address?.suburb?.message}</Text>
               </Flex>
 
               <Flex direction="column" gap="2">
@@ -183,6 +199,7 @@ export default function Task() {
                   placeholder="NSW"
                   {...register('address.state')}
                 />
+                <Text color="tomato">{errors.address?.state?.message}</Text>
               </Flex>
 
               <Flex direction="column" gap="2">
@@ -194,6 +211,7 @@ export default function Task() {
                   placeholder="2000"
                   {...register('address.postcode')}
                 />
+                <Text color="tomato">{errors.address?.postcode?.message}</Text>
               </Flex>
             </Flex>
 
@@ -208,15 +226,20 @@ export default function Task() {
                 <Text asChild size="2" weight="bold">
                   <label htmlFor="due_date">Date</label>
                 </Text>
-                <TextField.Root
-                  type="date"
-                  variant="surface"
-                  placeholder="123 George St"
-                  {...register('due_date')}
-                />
+                <Box>
+                  <Controller
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <Calendar date={value} onChange={onChange} />
+                    )}
+                    name="due_date"
+                  />
+                </Box>
+                <Text color="tomato">{errors.due_date?.message}</Text>
               </Flex>
             </Flex>
           </Flex>
+          <Button type="submit">Create Task</Button>
         </form>
       </Card>
     </div>
