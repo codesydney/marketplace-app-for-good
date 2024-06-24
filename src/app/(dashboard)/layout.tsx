@@ -5,6 +5,8 @@ import Sidebar from '@/components/sidebar/Sidebar'
 import Header from '@/components/header/Header'
 import { createClient } from '@/utils/supabase/server'
 import ToasterProvider from '@/providers/ToasterProvider'
+import 'react-date-range/dist/styles.css' // main style file
+import 'react-date-range/dist/theme/default.css' // theme css file
 
 export default async function DashboardLayout({
   children,
