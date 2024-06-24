@@ -15,13 +15,8 @@ import Image from 'next/image'
 import { useState } from 'react'
 
 import { formatDate, toCurrencyString } from '@/utils/utils'
-import { Database } from '@/types/supabase'
 import { useTaskListingsQuery } from '@/hooks/use-task-queries'
-
-export type DatabaseRecord<T extends keyof Database['public']['Tables']> =
-  Database['public']['Tables'][T]['Row']
-
-type Task = DatabaseRecord<'tasks'>
+import { Task } from '@/types/utility-types'
 
 export default function TasksPage() {
   const { data: tasks } = useTaskListingsQuery()
