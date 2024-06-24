@@ -4,3 +4,4 @@ export type DatabaseRecord<T extends keyof Database['public']['Tables']> =
   Database['public']['Tables'][T]['Row']
 
 export type Task = DatabaseRecord<'tasks'>
+export type Address = DatabaseRecord<'addresses'>
